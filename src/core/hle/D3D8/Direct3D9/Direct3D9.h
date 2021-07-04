@@ -146,17 +146,28 @@ xbox::void_xt WINAPI EMUPATCH(D3DDevice_GetDisplayFieldStatus)
 // ******************************************************************
 // * patch: D3DDevice_BeginPush
 // ******************************************************************
-xbox::PDWORD WINAPI EMUPATCH(D3DDevice_BeginPush)(dword_xt Count);
+xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPush)(dword_xt Count);
 
 // ******************************************************************
 // * patch: D3DDevice_BeginPush2  //two arg version for xdk before 4531
 // ******************************************************************
-xbox::void_xt WINAPI EMUPATCH(D3DDevice_BeginPush2)(dword_xt Count, dword_xt **ppPush);
+xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPush2)(dword_xt Count, dword_xt **ppPush);
+
+// ******************************************************************
+// * patch: D3DDevice_BeginPushBuffer
+// ******************************************************************
+xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPushBuffer)(dword_xt Count);
 
 // ******************************************************************
 // * patch: D3DDevice_EndPush
 // ******************************************************************
-xbox::void_xt WINAPI EMUPATCH(D3DDevice_EndPush)(dword_xt *pPush);
+xbox::dword_xt* WINAPI EMUPATCH(D3DDevice_EndPush)(dword_xt *pPush);
+
+// ******************************************************************
+// * patch: D3DDevice_EndPushBuffer
+// ******************************************************************
+
+xbox::void_xt WINAPI EMUPATCH(D3DDevice_EndPushBuffer)(dword_xt *pPush);
 
 // ******************************************************************
 // * patch: D3DDevice_BeginVisibilityTest
@@ -721,7 +732,7 @@ xbox::void_xt WINAPI EMUPATCH(D3DDevice_SetVertexDataColor)
 // ******************************************************************
 // * patch: D3DDevice_End
 // ******************************************************************
-xbox::void_xt WINAPI EMUPATCH(D3DDevice_End)();
+xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_End)();
 
 // ******************************************************************
 // * patch: D3DDevice_RunPushBuffer
