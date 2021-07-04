@@ -56,9 +56,10 @@ const uint32_t PATCH_IS_FIBER = 1 << 4;
 // This allows for the eventual importing of Dxbx symbol files and even IDA signatures too!
 std::map<const std::string, const xbox_patch_t> g_PatchTable = {
 	// Direct3D
-	//PATCH_ENTRY("D3DDevice_Begin", xbox::EMUPATCH(D3DDevice_Begin), PATCH_HLE_D3D),
+	PATCH_ENTRY("D3DDevice_Begin", xbox::EMUPATCH(D3DDevice_Begin), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush", xbox::EMUPATCH(D3DDevice_BeginPush), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush2", xbox::EMUPATCH(D3DDevice_BeginPush2), PATCH_HLE_D3D),
+	//PATCH_ENTRY("D3DDevice_BeginPushBuffer", xbox::EMUPATCH(D3DDevice_BeginPushBuffer), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_BeginVisibilityTest", xbox::EMUPATCH(D3DDevice_BeginVisibilityTest), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_BlockOnFence", xbox::EMUPATCH(D3DDevice_BlockOnFence), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_BlockUntilVerticalBlank", xbox::EMUPATCH(D3DDevice_BlockUntilVerticalBlank), PATCH_HLE_D3D),
@@ -76,8 +77,9 @@ std::map<const std::string, const xbox_patch_t> g_PatchTable = {
 	PATCH_ENTRY("D3DDevice_DrawVerticesUP", xbox::EMUPATCH(D3DDevice_DrawVerticesUP), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_DrawVerticesUP_12", xbox::EMUPATCH(D3DDevice_DrawVerticesUP_12), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_EnableOverlay", xbox::EMUPATCH(D3DDevice_EnableOverlay), PATCH_HLE_D3D),
-	//PATCH_ENTRY("D3DDevice_End", xbox::EMUPATCH(D3DDevice_End), PATCH_HLE_D3D),
-	//PATCH_ENTRY("D3DDevice_EndPush", xbox::EMUPATCH(D3DDevice_EndPush), PATCH_HLE_D3D),
+	PATCH_ENTRY("D3DDevice_End", xbox::EMUPATCH(D3DDevice_End), PATCH_HLE_D3D),
+	PATCH_ENTRY("D3DDevice_EndPush", xbox::EMUPATCH(D3DDevice_EndPush), PATCH_HLE_D3D),
+	//PATCH_ENTRY("D3DDevice_EndPushBuffer", xbox::EMUPATCH(D3DDevice_EndPushBuffer), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_EndVisibilityTest", xbox::EMUPATCH(D3DDevice_EndVisibilityTest), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_EndVisibilityTest_0", xbox::EMUPATCH(D3DDevice_EndVisibilityTest_0), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_FlushVertexCache", xbox::EMUPATCH(D3DDevice_FlushVertexCache), PATCH_HLE_D3D),
