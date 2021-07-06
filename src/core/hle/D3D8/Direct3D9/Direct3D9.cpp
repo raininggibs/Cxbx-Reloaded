@@ -1683,13 +1683,13 @@ uint8_t *ConvertD3DTextureToARGB(
 	return pDst;
 }
 
-extern void HLE_init_pgraph_plugins(); // implemented in XbPushBuffer.cpp
+extern void D3D_init_pgraph_plugins(); // implemented in XbPushBuffer.cpp
 
 // Direct3D initialization (called before emulation begins)
 void EmuD3DInit()
 {
 
-	HLE_init_pgraph_plugins(); // TODO : Hook more nv_dma_map() result uses in EmuNV2A_PGRAPH.cpp
+	D3D_init_pgraph_plugins(); // TODO : Hook more nv_dma_map() result uses in EmuNV2A_PGRAPH.cpp
 
 	// Initialise CreateDevice Proxy Data struct
 	{
