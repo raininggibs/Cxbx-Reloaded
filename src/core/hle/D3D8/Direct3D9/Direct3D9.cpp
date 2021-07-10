@@ -3543,7 +3543,7 @@ void EmuKickOff(void)
 	if (g_pXbox_D3DDevice == nullptr) {
 		auto it = g_SymbolAddresses.find("D3DDEVICE");
 		if (it != g_SymbolAddresses.end()) {
-			g_Xbox_pD3DDevice = (xbox::dword_xt *)it->second;
+			g_pXbox_D3DDevice = (xbox::dword_xt *)it->second;
 		}
 	}
 	Xbox_D3DDevice = *g_pXbox_D3DDevice;
