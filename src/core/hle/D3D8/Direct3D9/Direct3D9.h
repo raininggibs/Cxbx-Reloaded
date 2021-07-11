@@ -156,7 +156,7 @@ xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPush2)(dword_xt Count, dword_xt 
 // ******************************************************************
 // * patch: D3DDevice_BeginPushBuffer
 // ******************************************************************
-xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPushBuffer)(dword_xt Count);
+xbox::hresult_xt WINAPI EMUPATCH(D3DDevice_BeginPushBuffer)(dword_xt * pPush);
 
 // ******************************************************************
 // * patch: D3DDevice_EndPush
@@ -1992,14 +1992,6 @@ xbox::void_xt WINAPI EMUPATCH(D3DDevice_SetModelView)
 // * patch: D3DDevice_FlushVertexCache
 // ******************************************************************
 xbox::void_xt WINAPI EMUPATCH(D3DDevice_FlushVertexCache)();
-
-// ******************************************************************
-// * patch: D3DDevice_BeginPushBuffer
-// ******************************************************************
-xbox::void_xt WINAPI EMUPATCH(D3DDevice_BeginPushBuffer)
-(
-	X_D3DPushBuffer *pPushBuffer
-);
 
 // ******************************************************************
 // * patch: D3DDevice_EndPushBuffer
