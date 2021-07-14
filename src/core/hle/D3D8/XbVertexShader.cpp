@@ -905,7 +905,7 @@ private:
 			return false;
 		}
 
-		assert(HostVertexElementDataType > 0);
+		assert(HostVertexElementDataType >= 0); // D3DDECLTYPE_FLOAT1 == 0 is valid
 		assert(HostVertexElementByteSize > 0);
 
 		// Select new stream, if needed
