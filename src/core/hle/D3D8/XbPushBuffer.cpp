@@ -232,6 +232,7 @@ extern D3DMATRIX g_xbox_transform_Composite;
 extern D3DMATRIX g_xbox_DirectModelView_View;
 extern D3DMATRIX g_xbox_DirectModelView_World;
 extern D3DMATRIX g_xbox_DirectModelView_Projection;
+extern D3DMATRIX g_xbox_backup_Projection;
 extern bool g_VertexShader_dirty;
 
 extern xbox::void_xt WINAPI CxbxImpl_SetModelView
@@ -253,16 +254,22 @@ void pgraph_use_Transform()
 	g_xbox_transform_Composite_dirty = false;
 	g_xbox_transform_use_DirectModelView = false;
 }
-
+void pgraph_use_DirectModelView()
+{
+	g_xbox_transform_use_DirectModelView = true;
+}
 bool pgraph_is_DirectModelView(void)
 {
+	return g_xbox_transform_use_DirectModelView;
 	//if ((g_xbox_transform_ModelView_dirty == true) || (g_xbox_transform_Composite_dirty = true)) {
+	/*
 	if(g_xbox_transform_use_DirectModelView==true){
 		return true;
 	}
 	else {
 		return false;
 	}
+	*/
 }
 bool pgraph_is_ModelView_dirty(void)
 {
@@ -429,34 +436,39 @@ void D3D_draw_state_update(NV2AState *d)
 	// Unused : D3DRS_FOGVERTEXMODE
 
 	// update transform matrix using NV2A KevlvinPrimitive contents if we're in direct ModelView transform mode.
-	if (pgraph_is_DirectModelView()) {
-		// this will update matrix world/view/projection using matrix ModelView and Composite
-		if (pgraph_is_ModelView_dirty()) {
-			if((g_xbox_transform_ModelView_dirty == true) && (g_xbox_transform_Composite_dirty== true)  ){
-				CxbxImpl_SetModelView(&g_xbox_transform_ModelView, nullptr, &g_xbox_transform_Composite);
-			}
-			else if ((g_xbox_transform_ModelView_dirty == true) && (g_xbox_transform_Composite_dirty != true)) {
-				CxbxImpl_SetModelView(&g_xbox_transform_ModelView, nullptr, nullptr);;
-			}
+	extern xbox::X_VERTEXSHADERCONSTANTMODE g_Xbox_VertexShaderConstantMode; // TMP glue
+	// only update DirectModelView trasform in FixedFunction and constant mode not in D3DSCM_192CONSTANTS, because ModelView will overwrite certain negative constant registers.
+	if((g_Xbox_VertexShaderMode == VertexShaderMode::FixedFunction)&&((g_Xbox_VertexShaderConstantMode& ~X_D3DSCM_NORESERVEDCONSTANTS) != X_D3DSCM_192CONSTANTS)){
+		if (pgraph_is_DirectModelView()) {
+			// this will update matrix world/view/projection using matrix ModelView and Composite
+			if (pgraph_is_ModelView_dirty()) {
+				if ((g_xbox_transform_ModelView_dirty == true) && (g_xbox_transform_Composite_dirty == true)) {
+					CxbxImpl_SetModelView(&g_xbox_transform_ModelView, nullptr, &g_xbox_transform_Composite);
 
-			//clear ModelView dirty flags.
-			g_xbox_transform_ModelView_dirty = false;
-			g_xbox_transform_InverseModelView_dirty = false;
-			g_xbox_transform_Composite_dirty = false;
+					//clear ModelView dirty flags.
+					g_xbox_transform_ModelView_dirty = false;
+					g_xbox_transform_InverseModelView_dirty = false;
+					g_xbox_transform_Composite_dirty = false;
+					// shall we reset this mode flag here? it is supposed to be reset only when the SetModelView is called with pModelView== NULL, how can we detect that?
+					g_xbox_transform_use_DirectModelView = false;
+				}
+			}
+			// set host d3d transform
+			HRESULT hRet = g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_xbox_DirectModelView_View);
+			hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(0), &g_xbox_DirectModelView_World);
+			// xbox d3d only sets world matrix 0 in DirectModelView mode?
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(1), &g_xbox_DirectModelView_World);
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(2), &g_xbox_DirectModelView_World);
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(3), &g_xbox_DirectModelView_World);
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_DirectModelView_Projection);
+
+			// testing codes with original xbox d3d projection matrix
+			hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_backup_Projection);
+			//DEBUG_D3DRESULT(hRet, "g_pD3DDevice->SetTransform");
+
+			//these matrix will be used in UpdateFixedFunctionShaderLight() and UpdateFixedFunctionVertexShaderState() later in CxbxUpdateNativeD3DResources();
 		}
-		// set host d3d transform
-		HRESULT hRet = g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_xbox_DirectModelView_View);
-		hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(0), &g_xbox_DirectModelView_World);
-		hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(1), &g_xbox_DirectModelView_World);
-		hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(2), &g_xbox_DirectModelView_World);
-		hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(3), &g_xbox_DirectModelView_World);
-		hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_DirectModelView_Projection);
-
-		//DEBUG_D3DRESULT(hRet, "g_pD3DDevice->SetTransform");
-
-		//these matrix will be used in UpdateFixedFunctionShaderLight() and UpdateFixedFunctionVertexShaderState() later in CxbxUpdateNativeD3DResources();
 	}
-	
 
 	// Note, that g_Xbox_VertexShaderMode should be left untouched,
 	// because except for the declaration override, the Xbox shader (either FVF
@@ -537,6 +549,7 @@ void D3D_draw_arrays(NV2AState *d)
 		//because CxbxDrawPrimitiveUP() can only handle dwStartVertex == 0, so we shift the pXboxVertexStreamZeroData to where dwStartVertex is, and reset dwStartVertex to 0.
 		DrawContext.pXboxVertexStreamZeroData = (PVOID)((DWORD)DrawContext.pXboxVertexStreamZeroData + DrawContext.uiXboxVertexStreamZeroStride*DrawContext.dwStartVertex);
 		DrawContext.dwStartVertex = 0;
+		// draw arrays
 		CxbxDrawPrimitiveUP(DrawContext);
 	}
 
@@ -572,7 +585,7 @@ void D3D_draw_inline_buffer(NV2AState *d)
 	DrawContext.dwStartVertex = 0;
 	DrawContext.pXboxVertexStreamZeroData = pg->inline_buffer;
 	DrawContext.uiXboxVertexStreamZeroStride = D3D_StreamZeroStride;
-
+	// inline buffer
 	CxbxDrawPrimitiveUP(DrawContext);
 	//reset vertex attribute setting flags.
 	for (unsigned slot = 0; slot < X_VSH_MAX_ATTRIBUTES; slot++) {
@@ -607,7 +620,7 @@ void D3D_draw_inline_array(NV2AState *d)
 		//DrawContext.dwStartVertex = 0;
 		DrawContext.pXboxVertexStreamZeroData = pg->inline_array;
 		DrawContext.uiXboxVertexStreamZeroStride = D3D_StreamZeroStride;
-
+		// inline arrays
 		CxbxDrawPrimitiveUP(DrawContext);
 
 	}
@@ -624,7 +637,7 @@ void D3D_draw_inline_elements(NV2AState *d)
 	DrawContext.dwVertexCount = pg->inline_elements_length;
 	DrawContext.dwStartVertex = 0;
 	DrawContext.pXboxIndexData = d->pgraph.inline_elements;
-
+	// inline elements, indexed
 	CxbxDrawIndexed(DrawContext);
 
 }

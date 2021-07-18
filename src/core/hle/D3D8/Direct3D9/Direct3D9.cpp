@@ -44,6 +44,7 @@
 #include "core\hle\D3D8\XbVertexShader.h"
 #include "core\hle\D3D8\XbPixelShader.h" // For DxbxUpdateActivePixelShader
 #include "core\hle\D3D8\XbPushBuffer.h"
+#include "core\hle\D3D8\XbD3D8Types.h"
 #include "core\kernel\memory-manager\VMManager.h" // for g_VMManager
 #include "core\hle\XAPI\Xapi.h" // For EMUPATCH
 #include "core\hle\D3D8\XbConvert.h"
@@ -376,6 +377,7 @@ g_EmuCDPD;
     XB_MACRO(xbox::void_xt,       WINAPI,     D3D_CommonSetRenderTarget,                          (xbox::X_D3DSurface*, xbox::X_D3DSurface*, void*)                                                     );  \
     XB_MACRO(xbox::void_xt,       WINAPI,     D3D_DestroyResource,                                (xbox::X_D3DResource*)                                                                                );  \
     XB_MACRO(xbox::void_xt,       WINAPI,     D3D_DestroyResource__LTCG,                          (xbox::void_xt)                                                                                       );  \
+    XB_MACRO(xbox::hresult_xt,    WINAPI,     D3D_UpdateProjectionViewportTransform,              (xbox::void_xt)                                                                                       );  \
     XB_MACRO(xbox::hresult_xt,    WINAPI,     Direct3D_CreateDevice,                              (xbox::uint_xt, D3DDEVTYPE, HWND, xbox::dword_xt, xbox::X_D3DPRESENT_PARAMETERS*, xbox::X_D3DDevice**));  \
     XB_MACRO(xbox::hresult_xt,    WINAPI,     Direct3D_CreateDevice_16__LTCG_eax_BehaviorFlags_ebx_ppReturnedDeviceInterface, (xbox::uint_xt, D3DDEVTYPE, HWND, xbox::X_D3DPRESENT_PARAMETERS*)         );  \
     XB_MACRO(xbox::hresult_xt,    WINAPI,     Direct3D_CreateDevice_16__LTCG_eax_BehaviorFlags_ecx_ppReturnedDeviceInterface, (xbox::uint_xt, D3DDEVTYPE, HWND, xbox::X_D3DPRESENT_PARAMETERS*)         );  \
@@ -4491,6 +4493,50 @@ void CxbxImpl_SetViewport(xbox::X_D3DVIEWPORT8* pViewport)
 	g_Xbox_Viewport.Height = std::min(g_Xbox_Viewport.Height, (DWORD)rendertargetBaseHeight - g_Xbox_Viewport.Y);
 }
 
+const DWORD FixedFunctionPipelineConstants[] =
+{
+
+	0x00000000,   // 0.0
+	0x3f000000,   // 0.5
+	0x3f800000,   // 1.0
+	0x40000000,   // 2.0
+
+	0xbf800000,   // -1.0
+	0x00000000,   //  0.0
+	0x3f800000,   //  1.0
+	0x40000000,   //  2.0
+
+	0x00000000,   //  0.0
+	0x00000000,   //  0.0
+	0xbf800000,   // -1.0
+	0x00000000,   //  0.0
+};
+
+xbox::void_xt WINAPI CxbxImpl_SetShaderConstantMode
+(
+	xbox::X_VERTEXSHADERCONSTANTMODE Mode
+)
+{
+	g_Xbox_VertexShaderConstantMode = Mode;
+	// if using 96 constants mode, copy fixed pipe line constatnts back to vertex shader constants.
+	if (Mode == X_D3DSCM_96CONSTANTS) { // X_D3DSCM_96CONSTANTS = 0
+		// set xbox vertex shader constant NV_IGRAPH_XF_XFCTX_CONS0 = 0x3C, 
+		//xbox::EMUPATCH(D3DDevice_SetVertexShaderConstant)(NV_IGRAPH_XF_XFCTX_CONS0,(xbox::PVOID)&FixedFunctionPipelineConstants[0],3);
+		// reset lights
+
+		// reset Texture Transform
+
+		// reset Transform
+
+		// reset fixed function T&L constants
+		CxbxImpl_SetVertexShaderConstant(NV_IGRAPH_XF_XFCTX_CONS0, (xbox::PVOID)&FixedFunctionPipelineConstants[0], 3);
+		// reset 4 Texgen Planes
+
+		// reset Fog Plane
+
+	}
+}
+
 // LTCG specific D3DDevice_SetShaderConstantMode function...
 // This uses a custom calling convention where parameter is passed in EAX
 __declspec(naked) xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetShaderConstantMode_0)
@@ -4505,7 +4551,7 @@ __declspec(naked) xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetShaderConstan
     }
 
     //EMUPATCH(D3DDevice_SetShaderConstantMode)(Mode);
-	g_Xbox_VertexShaderConstantMode = Mode;
+	CxbxImpl_SetShaderConstantMode( Mode);
     __asm {
         LTCG_EPILOGUE
         ret
@@ -4522,7 +4568,7 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetShaderConstantMode)
 {
 	LOG_FUNC_ONE_ARG(Mode);
 	XB_TRMP(D3DDevice_SetShaderConstantMode)(Mode);
-    g_Xbox_VertexShaderConstantMode = Mode;
+	CxbxImpl_SetShaderConstantMode(Mode);
 }
 
 // LTCG specific D3DDevice_SetVertexShaderConstant function...
@@ -6538,9 +6584,11 @@ D3DMATRIX g_xbox_DirectModelView_View;
 D3DMATRIX g_xbox_DirectModelView_World;
 D3DMATRIX g_xbox_DirectModelView_Projection;
 D3DMATRIX g_xbox_DirectModelView_InverseWorldViewTransposed;
+D3DMATRIX g_xbox_backup_Projection;
 
 
 static D3DMATRIX * g_xbox_transform_matrix = nullptr;
+static D3DMATRIX * g_xbox_ProjectionViewportTransform_matrix = nullptr;
 
 void UpdateFixedFunctionShaderLight(int d3dLightIndex, Light* pShaderLight, D3DXVECTOR4* pLightAmbient) {
 	if (d3dLightIndex == -1) {
@@ -6916,7 +6964,30 @@ xbox::void_xt __fastcall xbox::EMUPATCH(D3DDevice_SetRenderState_Simple)
     XboxRenderStates.SetXboxRenderState(XboxRenderStateIndex, Value);
 }
 
+void CxbxImpl_GetProjectionViewportMatrix(D3DMATRIX *pProjectionViewportTransform)
+{
+	// get the transform matrix pointer in xbox d3d and store it in g_xbox_transform_matrix if it's not set yet
+	if (g_xbox_ProjectionViewportTransform_matrix == nullptr) {
+		byte * pProjectionViewportTransform = nullptr;
+		auto it = g_SymbolAddresses.find("D3D_UpdateProjectionViewportTransform");
+		if (it != g_SymbolAddresses.end()) {
+			pProjectionViewportTransform = (byte *)it->second;
+			if ((*(byte*)(pProjectionViewportTransform + 0x126)) == 0x8D) {
+				g_xbox_ProjectionViewportTransform_matrix = (D3DMATRIX *)((*(DWORD*)(pProjectionViewportTransform + 0x128)) + *g_pXbox_D3DDevice);
+			}
+			else {
+				g_xbox_ProjectionViewportTransform_matrix = (D3DMATRIX *)((*(DWORD*)(pProjectionViewportTransform + 0x127)) + *g_pXbox_D3DDevice);
+			}
+		}
+	}
+	// 
+	if (g_xbox_ProjectionViewportTransform_matrix != nullptr) {
+		// store the ProjectionViewportTransform matrix
+		*pProjectionViewportTransform = *g_xbox_ProjectionViewportTransform_matrix;
+	}
 
+
+}
 
 void CxbxImpl_GetTransform
 (
@@ -6942,15 +7013,22 @@ void CxbxImpl_SetTransformFast
 		auto it = g_SymbolAddresses.find("D3DDevice_SetTransform");
 		if (it != g_SymbolAddresses.end()) {
 			pSetTransform = (byte *)it->second;
-			g_xbox_transform_matrix = (D3DMATRIX *)((*(DWORD*)(pSetTransform + 0x19))+ *g_pXbox_D3DDevice);
-			
+			if ((*(byte*)(pSetTransform + 0x11)) == 0x8D) {
+				g_xbox_transform_matrix = (D3DMATRIX *)( ((*(byte*)(pSetTransform + 0x13))*0x10) + *g_pXbox_D3DDevice);
+			}
+			else {
+				g_xbox_transform_matrix = (D3DMATRIX *)((*(DWORD*)(pSetTransform + 0x19)) + *g_pXbox_D3DDevice);
+			}
 		}
 		else {
 			it = g_SymbolAddresses.find("D3DDevice_SetTransform_0");
 			if (it != g_SymbolAddresses.end()) {
 				pSetTransform = (byte *)it->second;
-				// not sure the offset is 0x19 or not, need to verify.
-				g_xbox_transform_matrix = (D3DMATRIX *)((*(DWORD*)(pSetTransform + 0x19)) + *g_pXbox_D3DDevice);
+				// currently only fit for 
+				if ((*(byte*)(pSetTransform + 0x10)) == 0x19) {
+					// not sure the offset is 0x19 or not, need to verify.
+					g_xbox_transform_matrix = (D3DMATRIX *)((*(DWORD*)(pSetTransform + 0x11)) + *g_pXbox_D3DDevice);
+				}
 			}
 		}
 	}
@@ -9572,6 +9650,7 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_PrimeVertexCache)
 }
 
 extern void pgraph_use_Transform();
+extern void pgraph_use_DirectModelView();
 
 xbox::void_xt WINAPI CxbxImpl_SetModelView
 (
@@ -9580,15 +9659,15 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 	CONST D3DMATRIX *pComposite
 )
 {
-	// we can't calculate matProjection without pModelView
-	if ((pModelView == nullptr )) {
+	// we can't calculate matProjection without pComposite
+	if ( (pComposite == nullptr) || (pModelView == nullptr)) {
 		// cancel DirectModelView transform mode. 
 		pgraph_use_Transform();
 		return;
 	}
-
+	// save the copies of each matrix.
 	g_xbox_transform_ModelView = *pModelView;
-	if (pComposite != nullptr)g_xbox_transform_Composite = *pComposite;
+	g_xbox_transform_Composite = *pComposite;
 	if(pInverseModelView!=nullptr)g_xbox_transform_InverseModelView = *pInverseModelView;
 	// matModelView=matWorld*matView, we have no idea of these two Matrix. so we use unit matrix for view matrix, and matModelView matrix for matWorld
 	D3DMATRIX matUnit;
@@ -9598,8 +9677,6 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 	matUnit._33 = 1.0;
 	matUnit._44 = 1.0;
 
-	//CxbxImpl_SetTransform(xbox::X_D3DTS_WORLD, pModelView);
-	//CxbxImpl_SetTransform(xbox::X_D3DTS_VIEW, &matUnit);
 	g_xbox_DirectModelView_View= matUnit;
 	g_xbox_DirectModelView_World= *pModelView; 
 
@@ -9609,42 +9686,38 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 
 	D3DXMatrixTranspose((D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed, &matInverseModelViewNew);
 
-	if ((pComposite == nullptr)) {
-		// use xbox d3d projection if we don't have pComposite
-		CxbxImpl_GetTransform(xbox::X_D3DTS_PROJECTION, &g_xbox_DirectModelView_Projection);
-		return;
-	}
+	//we have to check D3D__RenderState[D3DRS_VERTEXBLEND], if only skinning, the composite matrix doesn't include the modelview matrix.
 
 	// matComposite = matModelView * matProjectionViewportTransform
 	// matProjectionViewportTransform = matPjojection * matViewportTransform
 	// if we set matProjection to matUnit, then CDevice_GetProjectionViewportMatrix() will return matViewportTransform
 	D3DXMATRIX matViewportTransform;
-	// set projection to unit matrix, so we can get viewport transform matrix.
-	//CxbxImpl_SetTransform(xbox::X_D3DTS_PROJECTION, &matUnit);
-	// zeroout matViewportTransform
-	//memset(&matViewportTransform._11, 0, sizeof(matViewportTransform));
-	if(XB_TRMP(D3DDevice_GetProjectionViewportMatrix)){
-	    XB_TRMP(D3DDevice_GetProjectionViewportMatrix)(&matViewportTransform);
+
+	// backup xbox d3d porjection matrix
+	CxbxImpl_GetTransform(xbox::X_D3DTS_PROJECTION, &g_xbox_backup_Projection);
+	// set projection to unit matrix, using trampoline directly, so we can get viewport transform matrix.
+	CxbxImpl_SetTransformFast(xbox::X_D3DTS_PROJECTION, &matUnit);
+	// update ProjectionViewportTransform matrix
+	if (XB_TRMP(D3D_UpdateProjectionViewportTransform))
+	{
+		XB_TRMP(D3D_UpdateProjectionViewportTransform)();
 	}
-	else {
-		// can't calculate projection matrix, use xbox d3d projection matrix
-		CxbxImpl_GetTransform(xbox::X_D3DTS_PROJECTION, &g_xbox_DirectModelView_Projection);
-		return;
-	}
+	// read back ProjectionViewportTransform matrix, it should be ViewportTrasform matrix only.
+	CxbxImpl_GetProjectionViewportMatrix(&matViewportTransform);
+
+	// restore xbox d3d porjection matrix
+	CxbxImpl_SetTransformFast(xbox::X_D3DTS_PROJECTION, &g_xbox_backup_Projection);
 
 	D3DXMATRIX matInverseViewportTransform;
 	// get matInverseViewportTransform
 	D3DXMatrixInverse(&matInverseViewportTransform, NULL, &matViewportTransform);
 
-
-
-
-	//D3DXMATRIX matProjection;
+	// be aware, the composite matrix won't include the modleview matrix in skinning mode. we have to figure out a way to tell whether we're in skinning mode or not.
 	// matPjojection = inverseModelView*matModelView*matProjection*matViewportTransform * matInverseViewportTransform = matProjection*matViewportTransform * matInverseViewportTransform = matProjection
-	g_xbox_DirectModelView_Projection = matInverseModelViewNew * (*pComposite)* matInverseViewportTransform;
-
-	//CxbxImpl_SetTransform(xbox::X_D3DTS_PROJECTION, &matProjection);
-
+	//g_xbox_DirectModelView_Projection = matInverseModelViewNew * (*pComposite)* matInverseViewportTransform;
+	D3DXMATRIX matTmp;
+	D3DXMatrixMultiply(&matTmp,&matInverseModelViewNew, (D3DXMATRIX*)pComposite);
+	D3DXMatrixMultiply((D3DXMATRIX*)&g_xbox_DirectModelView_Projection, &matTmp, &matInverseViewportTransform);
 }
 // ******************************************************************
 // * patch: D3DDevice_SetModelView
