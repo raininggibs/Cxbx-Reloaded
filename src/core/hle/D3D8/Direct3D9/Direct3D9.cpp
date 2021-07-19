@@ -9719,6 +9719,7 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 	D3DXMatrixMultiply(&matTmp,&matInverseModelViewNew, (D3DXMATRIX*)pComposite);
 	D3DXMatrixMultiply((D3DXMATRIX*)&g_xbox_DirectModelView_Projection, &matTmp, &matInverseViewportTransform);
 }
+
 // ******************************************************************
 // * patch: D3DDevice_SetModelView
 // ******************************************************************
@@ -9740,6 +9741,16 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetModelView)
 	if (g_pXbox_BeginPush_Buffer == nullptr){
 	    CxbxImpl_SetModelView(pModelView, pInverseModelView, pComposite);
 	}
+	// reset g_xbox_transform_use_DirectModelView flag when nullptr is used to call
+	if ((pModelView==nullptr) || (pComposite==nullptr)) {
+		pgraph_use_Transform();
+		return;
+	}
+	// set g_xbox_transform_use_DirectModelView flag
+	//pgraph_use_DirectModelView();
+	
+	// we shall set the projection matrix here
+	CxbxImpl_SetModelView(pModelView, pInverseModelView, pComposite);
 	LOG_UNIMPLEMENTED();
 }
 

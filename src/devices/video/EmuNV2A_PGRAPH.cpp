@@ -1162,9 +1162,9 @@ extern DWORD ABGR_to_ARGB(const uint32_t color);
 extern void set_IVB_DECL_override(void);
 extern void reset_IVB_DECL_override(void);
 extern RAMHTEntry ramht_lookup(NV2AState *d, uint32_t handle);
-void pgraph_SetModelViewMatrix(NV2AState *d);
-void pgraph_SetInverseModelViewMatrix(NV2AState *d);
-void pgraph_SetCompositeMatrix(NV2AState *d);
+extern void pgraph_SetModelViewMatrix(D3DXMATRIX * pModelView);
+extern void pgraph_SetInverseModelViewMatrix(D3DXMATRIX *pInverseModelView);
+extern void pgraph_SetCompositeMatrix(D3DXMATRIX *pComposite);
 
 //method count always represnt total dword needed as the arguments following the method.
 //caller must ensure there are enough argements available in argv.
@@ -2262,7 +2262,8 @@ int pgraph_handle_method(
                         pg->vsh_constants[row][entry % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
-					pgraph_SetModelViewMatrix(d);
+					//pgraph_SetModelViewMatrix(d);
+					pgraph_SetModelViewMatrix((D3DXMATRIX *)&pg->KelvinPrimitive.SetModelViewMatrix[0][0]);
                     break;
                 }
 				//Matrix not transposed before pushed, always matrix 0, method count 12
@@ -2278,7 +2279,8 @@ int pgraph_handle_method(
                         pg->vsh_constants[row][entry % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
-					pgraph_SetInverseModelViewMatrix(d);
+					//pgraph_SetInverseModelViewMatrix(d);
+					pgraph_SetInverseModelViewMatrix((D3DXMATRIX *)&pg->KelvinPrimitive.SetInverseModelViewMatrix[0][0]);
                     break;
                 }
 				//Matrix transposed before pushed, always matrix 0, method count 16
@@ -2292,7 +2294,8 @@ int pgraph_handle_method(
                         pg->vsh_constants[row][slot % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
-					pgraph_SetCompositeMatrix(d);
+					//pgraph_SetCompositeMatrix(d);
+					pgraph_SetCompositeMatrix((D3DXMATRIX *)&pg->KelvinPrimitive.SetCompositeMatrix[0]);
                     break;
                 }
 
@@ -4030,7 +4033,7 @@ int pgraph_handle_method(
 					if (g_Xbox_VertexShaderMode == VertexShaderMode::FixedFunction) {
 
 						g_Xbox_VertexShaderMode = VertexShaderMode::ShaderProgram;
-						g_UseFixedFunctionVertexShader = false;
+						//g_UseFixedFunctionVertexShader = false;
 
 						// for shader program, here we set it to default register 0, later when we reach NV097_SET_TRANSFORM_PROGRAM_START, we'll use the register addr passed in.
 						g_Xbox_VertexShader_FunctionSlots_StartAddress = 0;
@@ -4073,7 +4076,7 @@ int pgraph_handle_method(
 					// if we hit here with g_Xbox_VertexShaderMode==FixedFunction, then we're in Passthrough
 					if (g_Xbox_VertexShaderMode == VertexShaderMode::FixedFunction) {
 						g_Xbox_VertexShaderMode = VertexShaderMode::Passthrough;
-						g_UseFixedFunctionVertexShader = false;
+						//g_UseFixedFunctionVertexShader = false;
 						// passthrough always starts from register 0
 						g_Xbox_VertexShader_FunctionSlots_StartAddress = 0;
 						// not sure whether we should set this bool here or not.

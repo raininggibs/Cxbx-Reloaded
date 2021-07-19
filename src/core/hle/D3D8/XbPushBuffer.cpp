@@ -281,24 +281,24 @@ bool pgraph_is_ModelView_dirty(void)
 	}
 }
 
-void pgraph_SetModelViewMatrix(NV2AState *d)
+void pgraph_SetModelViewMatrix(D3DXMATRIX * pModelView)
 {
-	PGRAPHState *pg = &d->pgraph;
-	D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_ModelView, (D3DXMATRIX *)&pg->KelvinPrimitive.SetModelViewMatrix0);
+	//PGRAPHState *pg = &d->pgraph;
+	D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_ModelView, (D3DXMATRIX *)pModelView);
 	g_xbox_transform_ModelView_dirty = true;
 	g_xbox_transform_use_DirectModelView = true;
 }
-void pgraph_SetInverseModelViewMatrix(NV2AState *d)
+void pgraph_SetInverseModelViewMatrix(D3DXMATRIX *pInverseModelView)
 {
-	PGRAPHState *pg = &d->pgraph;
-	g_xbox_transform_InverseModelView = *(D3DMATRIX *)(&pg->KelvinPrimitive.SetInverseModelViewMatrix0);
+	//PGRAPHState *pg = &d->pgraph;
+	g_xbox_transform_InverseModelView = *pInverseModelView;
 	g_xbox_transform_InverseModelView_dirty = true;
 	g_xbox_transform_use_DirectModelView = true;
 }
-void pgraph_SetCompositeMatrix(NV2AState *d)
+void pgraph_SetCompositeMatrix(D3DXMATRIX *pComposite)
 {
-	PGRAPHState *pg = &d->pgraph;
-	D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_Composite, (D3DXMATRIX *)&pg->KelvinPrimitive.SetCompositeMatrix);
+	//PGRAPHState *pg = &d->pgraph;
+	D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_Composite, pComposite);
 	g_xbox_transform_Composite_dirty = true;
 	g_xbox_transform_use_DirectModelView = true;
 }
@@ -438,8 +438,7 @@ void D3D_draw_state_update(NV2AState *d)
 	// update transform matrix using NV2A KevlvinPrimitive contents if we're in direct ModelView transform mode.
 	extern xbox::X_VERTEXSHADERCONSTANTMODE g_Xbox_VertexShaderConstantMode; // TMP glue
 	// only update DirectModelView trasform in FixedFunction and constant mode not in D3DSCM_192CONSTANTS, because ModelView will overwrite certain negative constant registers.
-	if((g_Xbox_VertexShaderMode == VertexShaderMode::FixedFunction)&&((g_Xbox_VertexShaderConstantMode& ~X_D3DSCM_NORESERVEDCONSTANTS) != X_D3DSCM_192CONSTANTS)){
-		if (pgraph_is_DirectModelView()) {
+	if((g_Xbox_VertexShaderMode == VertexShaderMode::FixedFunction)&&((g_Xbox_VertexShaderConstantMode& ~X_D3DSCM_NORESERVEDCONSTANTS) != X_D3DSCM_192CONSTANTS)&& pgraph_is_DirectModelView()){
 			// this will update matrix world/view/projection using matrix ModelView and Composite
 			if (pgraph_is_ModelView_dirty()) {
 				if ((g_xbox_transform_ModelView_dirty == true) && (g_xbox_transform_Composite_dirty == true)) {
@@ -450,12 +449,15 @@ void D3D_draw_state_update(NV2AState *d)
 					g_xbox_transform_InverseModelView_dirty = false;
 					g_xbox_transform_Composite_dirty = false;
 					// shall we reset this mode flag here? it is supposed to be reset only when the SetModelView is called with pModelView== NULL, how can we detect that?
-					g_xbox_transform_use_DirectModelView = false;
+					// we shall not reset this flag here. because other functions still need to use it later. but when shall we reset it?
+					// g_xbox_transform_use_DirectModelView = false;
 				}
 			}
-			// set host d3d transform
-			HRESULT hRet = g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_xbox_DirectModelView_View);
-			hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(0), &g_xbox_DirectModelView_World);
+             
+			// no need to set host d3d transform, it's only relevant in FF mode, and for FF mode, we update the transform in UpdateFixedFunctionVertexShaderState()
+
+			//HRESULT hRet = g_pD3DDevice->SetTransform(D3DTS_VIEW, &g_xbox_DirectModelView_View);
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(0), &g_xbox_DirectModelView_World);
 			// xbox d3d only sets world matrix 0 in DirectModelView mode?
 			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(1), &g_xbox_DirectModelView_World);
 			//hRet = g_pD3DDevice->SetTransform(D3DTS_WORLDMATRIX(2), &g_xbox_DirectModelView_World);
@@ -463,11 +465,10 @@ void D3D_draw_state_update(NV2AState *d)
 			//hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_DirectModelView_Projection);
 
 			// testing codes with original xbox d3d projection matrix
-			hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_backup_Projection);
+			//hRet = g_pD3DDevice->SetTransform(D3DTS_PROJECTION, &g_xbox_backup_Projection);
 			//DEBUG_D3DRESULT(hRet, "g_pD3DDevice->SetTransform");
 
 			//these matrix will be used in UpdateFixedFunctionShaderLight() and UpdateFixedFunctionVertexShaderState() later in CxbxUpdateNativeD3DResources();
-		}
 	}
 
 	// Note, that g_Xbox_VertexShaderMode should be left untouched,
