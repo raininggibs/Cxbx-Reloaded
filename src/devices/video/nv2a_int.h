@@ -354,7 +354,6 @@ typedef struct NV097KelvinPrimitive {
 	uint32_t SetPointSize;				//0x0000043C
 	float SetProjectionMatrix[16];		//0x00000440
 	// xbox only uses SetModelViewMatrix0[16]; value set is transposed
-<<<<<<< HEAD
 	union {
 		float SetModelViewMatrix[4][16];		//0x00000480
 		struct {
@@ -385,7 +384,6 @@ typedef struct NV097KelvinPrimitive {
 			float SetTextureMatrix3[16];		//0x00000780
 		};
 	};
->>>>>>> 1d762418... refine setmodelview code
 	uint32_t Rev_07c0[0x80 / 4];
 	struct {
 		float S[4];

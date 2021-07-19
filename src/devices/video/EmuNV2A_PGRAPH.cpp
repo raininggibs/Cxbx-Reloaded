@@ -2610,7 +2610,8 @@ int pgraph_handle_method(
                         arg0 = argv[argc];
                         //target program register address is prestored in KelvinPrimitive.SetTransformProgramLoad
                         assert(pg->KelvinPrimitive.SetTransformProgramLoad < NV2A_MAX_TRANSFORM_PROGRAM_LENGTH);
-                        assert(arg0 == pg->KelvinPrimitive.SetTransformProgram[slot]);
+						// transform program is stored outside of KelvinPrimitive, so this assert check must be disabled.
+						//assert(arg0 == pg->KelvinPrimitive.SetTransformProgram[slot]);
                         //pg->KelvinPrimitive.SetTransformProgram[32] is not enough for xbox d3d, pgraph uses vsh_program_slots[136][4] to store vertex shader program
                         pg->vsh_program_slots[pg->KelvinPrimitive.SetTransformProgramLoad][slot % 4] = arg0;
                         if (slot % 4 == 3) {
@@ -2640,7 +2641,8 @@ int pgraph_handle_method(
                         arg0 = argv[argc];
                         //the target constant register address is prestored in NV097_SET_TRANSFORM_CONSTANT_LOAD  KelvinPrimitive.SetTransformConstantLoad
                         assert(pg->KelvinPrimitive.SetTransformConstantLoad < NV2A_VERTEXSHADER_CONSTANTS);
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetTransformConstant[slot])));
+						// since the transform constant is stored outside of KelvinPrimitive, we don't store it in KelvinPrimitive in the first round. so this assert check must be disabled.
+						//assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetTransformConstant[slot])));
                         // VertexShaderConstant *vsh_constant = &pg->vsh_constants[const_load];
                         if ((arg0 != pg->vsh_constants[pg->KelvinPrimitive.SetTransformConstantLoad][slot % 4])) {
                             pg->vsh_constants_dirty[pg->KelvinPrimitive.SetTransformConstantLoad] |= 1;
