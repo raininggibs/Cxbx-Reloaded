@@ -226,12 +226,13 @@ void D3D_texture_stage_update(NV2AState *d)
 	}
 }
 
-extern D3DMATRIX g_xbox_transform_ModelView;
-extern D3DMATRIX g_xbox_transform_InverseModelView;
+extern D3DMATRIX g_xbox_transform_ModelView[4];
+extern D3DMATRIX g_xbox_transform_InverseModelView[4];
 extern D3DMATRIX g_xbox_transform_Composite;
 extern D3DMATRIX g_xbox_DirectModelView_View;
 extern D3DMATRIX g_xbox_DirectModelView_World;
 extern D3DMATRIX g_xbox_DirectModelView_Projection;
+extern D3DMATRIX g_xbox_DirectModelView_InverseWorldViewTransposed[4];
 extern D3DMATRIX g_xbox_backup_Projection;
 extern bool g_VertexShader_dirty;
 
@@ -281,17 +282,23 @@ bool pgraph_is_ModelView_dirty(void)
 	}
 }
 
-void pgraph_SetModelViewMatrix(D3DXMATRIX * pModelView)
+void pgraph_SetModelViewMatrix(D3DXMATRIX * pModelView, unsigned int count=0)
 {
 	//PGRAPHState *pg = &d->pgraph;
-	D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_ModelView, (D3DXMATRIX *)pModelView);
+	//if(count>0){
+		D3DXMatrixTranspose((D3DXMATRIX *)&g_xbox_transform_ModelView[count], (D3DXMATRIX *)pModelView);
+		D3DXMATRIX matInverseModelViewNew;
+		// get matInverseModelViewNew, the input pInverseModelView might not present, so we always recalculate it.
+		D3DXMatrixInverse(&matInverseModelViewNew, NULL, (D3DXMATRIX*)pModelView);
+		D3DXMatrixTranspose((D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed[0], &matInverseModelViewNew);
+	//}
 	g_xbox_transform_ModelView_dirty = true;
 	g_xbox_transform_use_DirectModelView = true;
 }
-void pgraph_SetInverseModelViewMatrix(D3DXMATRIX *pInverseModelView)
+void pgraph_SetInverseModelViewMatrix(D3DXMATRIX *pInverseModelView, unsigned int count=0)
 {
 	//PGRAPHState *pg = &d->pgraph;
-	g_xbox_transform_InverseModelView = *pInverseModelView;
+	g_xbox_transform_InverseModelView[count] = *pInverseModelView;
 	g_xbox_transform_InverseModelView_dirty = true;
 	g_xbox_transform_use_DirectModelView = true;
 }
@@ -442,7 +449,7 @@ void D3D_draw_state_update(NV2AState *d)
 			// this will update matrix world/view/projection using matrix ModelView and Composite
 			if (pgraph_is_ModelView_dirty()) {
 				if ((g_xbox_transform_ModelView_dirty == true) && (g_xbox_transform_Composite_dirty == true)) {
-					CxbxImpl_SetModelView(&g_xbox_transform_ModelView, nullptr, &g_xbox_transform_Composite);
+					CxbxImpl_SetModelView(&g_xbox_transform_ModelView[0], nullptr, &g_xbox_transform_Composite);
 
 					//clear ModelView dirty flags.
 					g_xbox_transform_ModelView_dirty = false;

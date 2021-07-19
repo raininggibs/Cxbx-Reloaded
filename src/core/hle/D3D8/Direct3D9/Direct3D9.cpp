@@ -6577,13 +6577,13 @@ D3DXVECTOR4 toVector(D3DCOLORVALUE val) {
 	return D3DXVECTOR4(val.r, val.g, val.b, val.a);
 }
 extern bool pgraph_is_DirectModelView(void);
-D3DMATRIX g_xbox_transform_ModelView;
-D3DMATRIX g_xbox_transform_InverseModelView;
+D3DMATRIX g_xbox_transform_ModelView[4];
+D3DMATRIX g_xbox_transform_InverseModelView[4];
 D3DMATRIX g_xbox_transform_Composite;
 D3DMATRIX g_xbox_DirectModelView_View;
 D3DMATRIX g_xbox_DirectModelView_World;
 D3DMATRIX g_xbox_DirectModelView_Projection;
-D3DMATRIX g_xbox_DirectModelView_InverseWorldViewTransposed;
+D3DMATRIX g_xbox_DirectModelView_InverseWorldViewTransposed[4];
 D3DMATRIX g_xbox_backup_Projection;
 
 
@@ -6679,8 +6679,11 @@ void UpdateFixedFunctionVertexShaderState()
 		D3DXMatrixTranspose((D3DXMATRIX*)&ffShaderState.Transforms.View, (D3DXMATRIX*)&g_xbox_DirectModelView_View);
 
 		for (unsigned i = 0; i < ffShaderState.Modes.VertexBlend_NrOfMatrices; i++) {
-			D3DXMatrixTranspose((D3DXMATRIX*)&ffShaderState.Transforms.WorldView[i], (D3DXMATRIX*)&g_xbox_transform_ModelView);
-			D3DXMatrixTranspose((D3DXMATRIX*)&ffShaderState.Transforms.WorldViewInverseTranspose[i], (D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed);
+			// FIXME! stick with g_xbox_transform_ModelView[0] and g_xbox_DirectModelView_InverseWorldViewTransposed[0] when we're not in skinning mode. 
+			// when RenderState[X_D3DRS_VERTEXBLEND]!=0, we're in skinning mode, use 
+			unsigned int count = (XboxRenderStates.GetXboxRenderState(X_D3DRS_VERTEXBLEND) != 0) ? i : 0;
+			D3DXMatrixTranspose((D3DXMATRIX*)&ffShaderState.Transforms.WorldView[i], (D3DXMATRIX*)&g_xbox_transform_ModelView[count]);
+			D3DXMatrixTranspose((D3DXMATRIX*)&ffShaderState.Transforms.WorldViewInverseTranspose[i], (D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed[count]);
 		}
 	}
 	else {
@@ -9665,10 +9668,10 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 		pgraph_use_Transform();
 		return;
 	}
-	// save the copies of each matrix.
-	g_xbox_transform_ModelView = *pModelView;
+	// for FF transform save the copies of each matrix.
+	g_xbox_transform_ModelView[0] = *pModelView;
 	g_xbox_transform_Composite = *pComposite;
-	if(pInverseModelView!=nullptr)g_xbox_transform_InverseModelView = *pInverseModelView;
+	if(pInverseModelView!=nullptr)g_xbox_transform_InverseModelView[0] = *pInverseModelView;
 	// matModelView=matWorld*matView, we have no idea of these two Matrix. so we use unit matrix for view matrix, and matModelView matrix for matWorld
 	D3DMATRIX matUnit;
 	memset(&matUnit._11, 0, sizeof(matUnit));
@@ -9676,15 +9679,16 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 	matUnit._22 = 1.0;
 	matUnit._33 = 1.0;
 	matUnit._44 = 1.0;
-
+	// for FF transform
 	g_xbox_DirectModelView_View= matUnit;
+	// for FF transform
 	g_xbox_DirectModelView_World= *pModelView; 
 
 	D3DXMATRIX matInverseModelViewNew;
 	// get matInverseModelViewNew, the input pInverseModelView might not present, so we always recalculate it.
 	D3DXMatrixInverse(&matInverseModelViewNew, NULL, (D3DXMATRIX*)pModelView);
-
-	D3DXMatrixTranspose((D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed, &matInverseModelViewNew);
+	// for FF transform
+	D3DXMatrixTranspose((D3DXMATRIX*)&g_xbox_DirectModelView_InverseWorldViewTransposed[0], &matInverseModelViewNew);
 
 	//we have to check D3D__RenderState[D3DRS_VERTEXBLEND], if only skinning, the composite matrix doesn't include the modelview matrix.
 
@@ -9707,17 +9711,24 @@ xbox::void_xt WINAPI CxbxImpl_SetModelView
 
 	// restore xbox d3d porjection matrix
 	CxbxImpl_SetTransformFast(xbox::X_D3DTS_PROJECTION, &g_xbox_backup_Projection);
-
+	// vertex blen mode. *pComposite is ProjectionViewport Matrix, not including modelview matrix.
 	D3DXMATRIX matInverseViewportTransform;
 	// get matInverseViewportTransform
 	D3DXMatrixInverse(&matInverseViewportTransform, NULL, &matViewportTransform);
-
-	// be aware, the composite matrix won't include the modleview matrix in skinning mode. we have to figure out a way to tell whether we're in skinning mode or not.
-	// matPjojection = inverseModelView*matModelView*matProjection*matViewportTransform * matInverseViewportTransform = matProjection*matViewportTransform * matInverseViewportTransform = matProjection
-	//g_xbox_DirectModelView_Projection = matInverseModelViewNew * (*pComposite)* matInverseViewportTransform;
-	D3DXMATRIX matTmp;
-	D3DXMatrixMultiply(&matTmp,&matInverseModelViewNew, (D3DXMATRIX*)pComposite);
-	D3DXMatrixMultiply((D3DXMATRIX*)&g_xbox_DirectModelView_Projection, &matTmp, &matInverseViewportTransform);
+    // if we're in skinning mode. 
+	if(XboxRenderStates.GetXboxRenderState(xbox::X_D3DRS_VERTEXBLEND)!=0)
+	{
+		D3DXMatrixMultiply((D3DXMATRIX*)&g_xbox_DirectModelView_Projection, (D3DXMATRIX*)pComposite, &matInverseViewportTransform);
+    // not in skinning mode.
+	}else{
+		// be aware, the composite matrix won't include the modleview matrix in skinning mode. we have to figure out a way to tell whether we're in skinning mode or not.
+		// matPjojection = inverseModelView*matModelView*matProjection*matViewportTransform * matInverseViewportTransform = matProjection*matViewportTransform * matInverseViewportTransform = matProjection
+		//g_xbox_DirectModelView_Projection = matInverseModelViewNew * (*pComposite)* matInverseViewportTransform;
+		D3DXMATRIX matTmp;
+		// for FF transform, g_xbox_DirectModelView_Projection is final piece.
+		D3DXMatrixMultiply(&matTmp,&matInverseModelViewNew, (D3DXMATRIX*)pComposite);
+		D3DXMatrixMultiply((D3DXMATRIX*)&g_xbox_DirectModelView_Projection, &matTmp, &matInverseViewportTransform);
+	}
 }
 
 // ******************************************************************
