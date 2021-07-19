@@ -5431,7 +5431,8 @@ xbox::dword_xt WINAPI xbox::EMUPATCH(D3DDevice_Swap)
 {
 	LOG_FUNC_ONE_ARG(Flags);
 
-	// make sure pushbuffer pasring complete before we process swap.
+	// disable the force pushbuffer parsing waiting here. we're using multi buffering, using fence is more correct than force waiting.
+	/*
 	EmuKickOff();
 	while (g_nv2a_fifo_is_busy) {
 		//__asm {
@@ -5440,7 +5441,7 @@ xbox::dword_xt WINAPI xbox::EMUPATCH(D3DDevice_Swap)
 		// KickOff xbox d3d pushbuffer just in case pfifo_pusher_thread() gets trapped in qemu_cond_wait(). 
 		EmuKickOff();
 	}
-
+	*/
 	// TODO: Ensure this flag is always the same across library versions
 	if (Flags != 0 && Flags != CXBX_SWAP_PRESENT_FORWARD)
 		LOG_TEST_CASE("D3DDevice_Swap: Flags != 0");
