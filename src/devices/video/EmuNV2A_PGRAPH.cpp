@@ -1463,8 +1463,6 @@ int pgraph_handle_method(
                 //case NV097_SET_OBJECT:
 				case NV097_NO_OPERATION:	//this is used as short jump or interrupt, padding in front of fixups in order to make sure fixup will be applied before the instruction enter cache.
                 //case NV097_SET_BEGIN_END://now we use pg->primitive_mode for PrititiveType state   //enclave subset of drawing instructions. need special handling.
-                case NV097_SET_TRANSFORM_CONSTANT://this sets the vertex constant register/slots using index from NV097_SET_TRANSFORM_CONSTANT_LOAD, not the transform constants in KelvinPrime.
-                case NV097_SET_TRANSFORM_PROGRAM://this sets the vertex shader using index from NV097_SET_TRANSFORM_PROGRAM_LOAD, not the transform program in KelvinPrime.
 				// NV097_ARRAY_ELEMENT32 is PUSH_INSTR_IMM_INC, test case: Otogi. it's logical since NV097_ARRAY_ELEMENT32 is used to transfer the last odd index, if there were one.
 				case NV097_ARRAY_ELEMENT32: //PUSH_INSTR_IMM_INC
 					break;
@@ -2598,7 +2596,7 @@ int pgraph_handle_method(
 				for program set via pushbuffer directly. we need to update to HLE side and set g_Xbox_VertexShader_Handle and g_Xbox_VertexShaderMode
 				*/
 
-				CASE_32(NV097_SET_TRANSFORM_PROGRAM, 4) : {//not done yet //pg->KelvinPrimitive.SetTransformProgram[32]
+				CASE_32(NV097_SET_TRANSFORM_PROGRAM, 4) : {//done // pg->KelvinPrimitive.SetTransformProgram[32]
                         //KelvinPrimitive.SetTransformProgram[32] is update already. we update the extra vertex shader program as well.
 						//KelvinPrimitive.SetTransformProgram[32] holds only 32 slots. for program larger than 32 slots, must be split to batches.
 					    //before the first batch, NV097_SET_TRANSFORM_PROGRAM_LOAD must be called to set the beginning slot of loading.
@@ -2620,6 +2618,12 @@ int pgraph_handle_method(
                             //for single time method program set, we may leave the SET_TRANSFORM_PROGRAM_LOAD along,
                             //but if the program is large and requires multiple times of method set, the SET_TRANSFORM_PROGRAM_LOAD might need to be update.
                             //need to verify the actual vertex shader data pushbuffer snapshot.
+                            // TODO : Figure out if the actual NV2A increments SET_TRANSFORM_PROGRAM_LOAD / SetTransformProgramLoad per fully written slot, or only when the final slot is written to?
+                            // Note : Given how it's technically possible to write to a slot above zero and stop before the end, which
+                            // would allow writing another subset at a later time, it makes sense just process this as a partial write
+                            // and thus only increase the load index when the final slot is written to.
+                            // All Xbox D3D APIs we've analysed, allow for this potential NV2A behavior to be true (similar to how
+                            // the entire set of 16 vertix attributes only get processed after the position slot was written to).
                         }
                     }
 					// safe guard to make sure vertex shader program token parser won't went over the end of final slot.
@@ -2651,6 +2655,7 @@ int pgraph_handle_method(
                         //pg->KelvinPrimitive.SetTransformConstant[32] is not enough for xbox d3d, pgraph uses vsh_constants[192][4] to store vertex shader program
                         if (slot % 4 == 3) {
                             pg->KelvinPrimitive.SetTransformConstantLoad++; //pg->KelvinPrimitive.SetTransformConstantLoad must be advanced.
+                            // TODO : Figure out if the actual NV2A increments NV097_SET_TRANSFORM_CONSTANT_LOAD / SetTransformConstantLoad per fully written slot, or only when the final slot is written to?
                         }
                     }
 					break;
