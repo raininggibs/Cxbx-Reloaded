@@ -1166,6 +1166,321 @@ extern void pgraph_SetModelViewMatrix(D3DXMATRIX * pModelView,unsigned int count
 extern void pgraph_SetInverseModelViewMatrix(D3DXMATRIX *pInverseModelView, unsigned int count=0);
 extern void pgraph_SetCompositeMatrix(D3DXMATRIX *pComposite);
 
+void kelvin_validate_struct_field_offsets_against_NV097_defines()
+{
+	static_assert(offsetof(NV097KelvinPrimitive, SetObject) == NV097_SET_OBJECT);
+	// uint32_t Rev_0004[0xfc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, NoOperation) == NV097_NO_OPERATION); // 0x00000100
+	static_assert(offsetof(NV097KelvinPrimitive, Notify) == NV097_NOTIFY);
+	static_assert(offsetof(NV097KelvinPrimitive, SetWarningEnable) == NV097_SET_WARNING_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, GetState) == NV097_GET_STATE);
+	static_assert(offsetof(NV097KelvinPrimitive, WaitForIdle) == NV097_WAIT_FOR_IDLE);
+	// uint32_t Rev_0114[0xc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetFlipRead) == NV097_SET_FLIP_READ);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFlipWrite) == NV097_SET_FLIP_WRITE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFlipModulo) == NV097_SET_FLIP_MODULO);
+	static_assert(offsetof(NV097KelvinPrimitive, FlipIncrementWrite) == NV097_FLIP_INCREMENT_WRITE);
+	static_assert(offsetof(NV097KelvinPrimitive, FlipStall) == NV097_FLIP_STALL);
+	// uint32_t Rev_0134[0xc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, PmTrigger) == NV097_PM_TRIGGER);
+	// uint32_t Rev_0144[0x3c / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaNotifies) == NV097_SET_CONTEXT_DMA_NOTIFIES);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaA) == NV097_SET_CONTEXT_DMA_A);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaB) == NV097_SET_CONTEXT_DMA_B);
+	// uint32_t Rev_018c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaState) == NV097_SET_CONTEXT_DMA_STATE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaColor) == NV097_SET_CONTEXT_DMA_COLOR);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaZeta) == NV097_SET_CONTEXT_DMA_ZETA);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaVertexA) == NV097_SET_CONTEXT_DMA_VERTEX_A);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaVertexB) == NV097_SET_CONTEXT_DMA_VERTEX_B);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaSemaphore) == NV097_SET_CONTEXT_DMA_SEMAPHORE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetContextDmaReport) == NV097_SET_CONTEXT_DMA_REPORT);
+	// uint32_t Rev_01ac[0x54 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfaceClipHorizontal) == NV097_SET_SURFACE_CLIP_HORIZONTAL); // 0x00000200
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfaceClipVertical) == NV097_SET_SURFACE_CLIP_VERTICAL); // 0x00000204
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfaceFormat) == NV097_SET_SURFACE_FORMAT); // 0x00000204
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfacePitch) == NV097_SET_SURFACE_PITCH); // 0x00000204
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfaceColorOffset) == NV097_SET_SURFACE_COLOR_OFFSET); // 0x00000204
+	static_assert(offsetof(NV097KelvinPrimitive, SetSurfaceZetaOffset) == NV097_SET_SURFACE_ZETA_OFFSET); // 0x00000204
+	// uint32_t Rev_0218[0x48 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerAlphaICW[0]) == NV097_SET_COMBINER_ALPHA_ICW); // 0x00000260 [2]
+	// uint32_t Rev_0280[0x8 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerSpecularFogCW0) == NV097_SET_COMBINER_SPECULAR_FOG_CW0); // 0x00000288
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerSpecularFogCW1) == NV097_SET_COMBINER_SPECULAR_FOG_CW1); // 0x0000028C
+	static_assert(offsetof(NV097KelvinPrimitive, SetControl0) == NV097_SET_CONTROL0);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLightControl) == NV097_SET_LIGHT_CONTROL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetColorMaterial) == NV097_SET_COLOR_MATERIAL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogMode) == NV097_SET_FOG_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogGenMode) == NV097_SET_FOG_GEN_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogEnable) == NV097_SET_FOG_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogColor) == NV097_SET_FOG_COLOR);
+	// uint32_t Rev_02ac[0x8 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetWindowClipType) == NV097_SET_WINDOW_CLIP_TYPE); // 0x000002B4
+	// uint32_t Rev_02b8[0x8 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetWindowClipHorizontal[0]) == NV097_SET_WINDOW_CLIP_HORIZONTAL); // 0x000002C0 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetWindowClipVertical[0]) == NV097_SET_WINDOW_CLIP_VERTICAL); // 0x000002E0 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetAlphaTestEnable) == NV097_SET_ALPHA_TEST_ENABLE); // 0x00000300
+	static_assert(offsetof(NV097KelvinPrimitive, SetBlendEnable) == NV097_SET_BLEND_ENABLE); // 0x00000304
+	static_assert(offsetof(NV097KelvinPrimitive, SetCullFaceEnable) == NV097_SET_CULL_FACE_ENABLE); // 0x00000308
+	static_assert(offsetof(NV097KelvinPrimitive, SetDepthTestEnable) == NV097_SET_DEPTH_TEST_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetDitherEnable) == NV097_SET_DITHER_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLightingEnable) == NV097_SET_LIGHTING_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPointParamsEnable) == NV097_SET_POINT_PARAMS_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPointSmoothEnable) == NV097_SET_POINT_SMOOTH_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLineSmoothEnable) == NV097_SET_LINE_SMOOTH_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolySmoothEnable) == NV097_SET_POLY_SMOOTH_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetSkinMode) == NV097_SET_SKIN_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilTestEnable) == NV097_SET_STENCIL_TEST_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolyOffsetPointEnable) == NV097_SET_POLY_OFFSET_POINT_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolyOffsetLineEnable) == NV097_SET_POLY_OFFSET_LINE_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolyOffsetFillEnable) == NV097_SET_POLY_OFFSET_FILL_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetAlphaFunc) == NV097_SET_ALPHA_FUNC);
+	static_assert(offsetof(NV097KelvinPrimitive, SetAlphaRef) == NV097_SET_ALPHA_REF);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBlendFuncSfactor) == NV097_SET_BLEND_FUNC_SFACTOR);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBlendFuncDfactor) == NV097_SET_BLEND_FUNC_DFACTOR);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBlendColor) == NV097_SET_BLEND_COLOR);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBlendEquation) == NV097_SET_BLEND_EQUATION);
+	static_assert(offsetof(NV097KelvinPrimitive, SetDepthFunc) == NV097_SET_DEPTH_FUNC);
+	static_assert(offsetof(NV097KelvinPrimitive, SetColorMask) == NV097_SET_COLOR_MASK);
+	static_assert(offsetof(NV097KelvinPrimitive, SetDepthMask) == NV097_SET_DEPTH_MASK);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilMask) == NV097_SET_STENCIL_MASK);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilFunc) == NV097_SET_STENCIL_FUNC);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilFuncRef) == NV097_SET_STENCIL_FUNC_REF);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilFuncMask) == NV097_SET_STENCIL_FUNC_MASK);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilOpFail) == NV097_SET_STENCIL_OP_FAIL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilOpZfail) == NV097_SET_STENCIL_OP_ZFAIL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStencilOpZpass) == NV097_SET_STENCIL_OP_ZPASS);
+	static_assert(offsetof(NV097KelvinPrimitive, SetShadeMode) == NV097_SET_SHADE_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLineWidth) == NV097_SET_LINE_WIDTH);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolygonOffsetScaleFactor) == NV097_SET_POLYGON_OFFSET_SCALE_FACTOR);
+	static_assert(offsetof(NV097KelvinPrimitive, SetPolygonOffsetBias) == NV097_SET_POLYGON_OFFSET_BIAS);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFrontPolygonMode) == NV097_SET_FRONT_POLYGON_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackPolygonMode) == NV097_SET_BACK_POLYGON_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetClipMin) == NV097_SET_CLIP_MIN);
+	static_assert(offsetof(NV097KelvinPrimitive, SetClipMax) == NV097_SET_CLIP_MAX);
+	static_assert(offsetof(NV097KelvinPrimitive, SetCullFace) == NV097_SET_CULL_FACE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFrontFace) == NV097_SET_FRONT_FACE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetNormalizationEnable) == NV097_SET_NORMALIZATION_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetMaterialEmission[0]) == NV097_SET_MATERIAL_EMISSION); // 0x000003A8 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetMaterialAlpha) == NV097_SET_MATERIAL_ALPHA);
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularEnable) == NV097_SET_SPECULAR_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLightEnableMask) == NV097_SET_LIGHT_ENABLE_MASK);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgen[0].S) == NV097_SET_TEXGEN_S); // 0x000003C0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgen[0].T) == NV097_SET_TEXGEN_T); // [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgen[0].R) == NV097_SET_TEXGEN_R); // [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgen[0].Q) == NV097_SET_TEXGEN_Q); // [4]
+	// uint32_t Rev_0400[0x20 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTextureMatrixEnable) == NV097_SET_TEXTURE_MATRIX_ENABLE); // 0x00000420 [4]
+	// uint32_t Rev_0430[0xc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetPointSize) == NV097_SET_POINT_SIZE); // 0x0000043C
+	static_assert(offsetof(NV097KelvinPrimitive, SetProjectionMatrix) == NV097_SET_PROJECTION_MATRIX); // 0x00000440 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetModelViewMatrix0) == NV097_SET_MODEL_VIEW_MATRIX); // 0x00000480 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetModelViewMatrix1) == NV097_SET_MODEL_VIEW_MATRIX1); // 0x000004C0 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetModelViewMatrix2) == NV097_SET_MODEL_VIEW_MATRIX2); // 0x00000500 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetModelViewMatrix3) == NV097_SET_MODEL_VIEW_MATRIX3); // 0x00000540 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetInverseModelViewMatrix0) == NV097_SET_INVERSE_MODEL_VIEW_MATRIX); // 0x00000580 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetInverseModelViewMatrix1) == NV097_SET_INVERSE_MODEL_VIEW_MATRIX1); // 0x000005C0 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetInverseModelViewMatrix2) == NV097_SET_INVERSE_MODEL_VIEW_MATRIX2); // 0x00000600 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetInverseModelViewMatrix3) == NV097_SET_INVERSE_MODEL_VIEW_MATRIX3); // 0x00000640 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTextureMatrix0) == NV097_SET_TEXTURE_MATRIX); // 0x000006C0 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTextureMatrix1) == NV097_SET_TEXTURE_MATRIX1); // 0x00000700 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTextureMatrix2) == NV097_SET_TEXTURE_MATRIX2); // 0x00000740 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTextureMatrix3) == NV097_SET_TEXTURE_MATRIX3); // 0x00000780 [16]
+	// uint32_t Rev_07c0[0x80 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgenPlane[0].S) == NV097_SET_TEXGEN_PLANE_S); // 0x00000840 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgenPlane[0].T) == NV097_SET_TEXGEN_PLANE_T); // [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgenPlane[0].R) == NV097_SET_TEXGEN_PLANE_R); // [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgenPlane[0].Q) == NV097_SET_TEXGEN_PLANE_Q); // [4]
+	// uint32_t Rev_0940[0x80 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogParams[0]) == NV097_SET_FOG_PARAMS); // 0x000009C0 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexgenViewModel) == NV097_SET_TEXGEN_VIEW_MODEL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFogPlane[0]) == NV097_SET_FOG_PLANE); // 0x000009D0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularParams[0]) == NV097_SET_SPECULAR_PARAMS); // 0x000009E0 [6]
+	static_assert(offsetof(NV097KelvinPrimitive, SetSwathWidth) == NV097_SET_SWATH_WIDTH);
+	static_assert(offsetof(NV097KelvinPrimitive, SetFlatShadeOp) == NV097_SET_FLAT_SHADE_OP);
+	// uint32_t Rev_0a00[0x10 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetSceneAmbientColor[0]) == NV097_SET_SCENE_AMBIENT_COLOR); // 0x00000A10 [3]
+	// uint32_t Rev_0a1c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetViewportOffset[0]) == NV097_SET_VIEWPORT_OFFSET); // 0x00000A20 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetPointParams[0]) == NV097_SET_POINT_PARAMS); // 0x00000A30 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetEyePosition[0]) == NV097_SET_EYE_POSITION); // 0x00000A50 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerFactor0[0]) == NV097_SET_COMBINER_FACTOR0); // 0x00000A60 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerFactor1[0]) == NV097_SET_COMBINER_FACTOR1); // 0x00000A80 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerAlphaOCW[0]) == NV097_SET_COMBINER_ALPHA_OCW); // 0x00000AA0 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerColorICW[0]) == NV097_SET_COMBINER_COLOR_ICW); // 0x00000AC0 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetColorKeyColor[0]) == NV097_SET_COLOR_KEY_COLOR); // 0x00000AE0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetViewportScale[0]) == NV097_SET_VIEWPORT_SCALE); // 0x00000AF0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformProgram[0]) == NV097_SET_TRANSFORM_PROGRAM); // 0x00000B00 [32]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformConstant[0]) == NV097_SET_TRANSFORM_CONSTANT); // 0x00000B80 [32]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackLight[0].AmbientColor[0]) == NV097_SET_BACK_LIGHT_AMBIENT_COLOR); // 0x00000C00 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackLight[0].DiffuseColor[0]) == NV097_SET_BACK_LIGHT_DIFFUSE_COLOR); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackLight[0].SpecularColor[0]) == NV097_SET_BACK_LIGHT_SPECULAR_COLOR); // [3]
+	// uint32_t Rev_0c24[0x1c / 4];//dd (7)
+	// uint32_t Rev_0e00[0x200 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].AmbientColor[0]) == NV097_SET_LIGHT_AMBIENT_COLOR); // 0x00001000 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].DiffuseColor[0]) == NV097_SET_LIGHT_DIFFUSE_COLOR); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].SpecularColor[0]) == NV097_SET_LIGHT_SPECULAR_COLOR); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].LocalRange) == NV097_SET_LIGHT_LOCAL_RANGE); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].InfiniteHalfVector[0]) == NV097_SET_LIGHT_INFINITE_HALF_VECTOR); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].InfiniteDirection[0]) == NV097_SET_LIGHT_INFINITE_DIRECTION); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].SpotFalloff[0]) == NV097_SET_LIGHT_SPOT_FALLOFF); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].SpotDirection[0]) == NV097_SET_LIGHT_SPOT_DIRECTION); // [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].LocalPosition[0]) == NV097_SET_LIGHT_LOCAL_POSITION); // [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLight[0].LocalAttenuation[0]) == NV097_SET_LIGHT_LOCAL_ATTENUATION); // [3]
+	// uint32_t Rev_1074[0xc / 4];
+	// uint32_t Rev_1400[0x7c / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetStippleControl) == NV097_SET_STIPPLE_CONTROL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetStipplePattern) == NV097_SET_STIPPLE_PATTERN); // 0x00001480 [32]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertex3f) == NV097_SET_VERTEX3F); // 0x00001500 [3]
+	// uint32_t Rev_150c[0xc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertex4f) == NV097_SET_VERTEX4F); // 0x00001518 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertex4s) == NV097_SET_VERTEX4S); // 0x00001528 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetNormal3f) == NV097_SET_NORMAL3F); // 0x00001530 [3]
+	// uint32_t Rev_153c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetNormal3s) == NV097_SET_NORMAL3S); // 0x00001540 [2]
+	// uint32_t Rev_1548[0x8 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetDiffuseColor4f) == NV097_SET_DIFFUSE_COLOR4F); // 0x00001550 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetDiffuseColor3f) == NV097_SET_DIFFUSE_COLOR3F); // 0x00001560 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetDiffuseColor4ub) == NV097_SET_DIFFUSE_COLOR4UB);
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularColor4f) == NV097_SET_SPECULAR_COLOR4F); // 0x00001570 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularColor3f) == NV097_SET_SPECULAR_COLOR3F); // 0x00001580 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularColor4ub) == NV097_SET_SPECULAR_COLOR4UB);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord0_2f) == NV097_SET_TEXCOORD0_2F); // 0x00001590 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord0_2s) == NV097_SET_TEXCOORD0_2S);
+	// uint32_t Rev_159c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord0_4f) == NV097_SET_TEXCOORD0_4F); // 0x000015A0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord0_4s[0]) == NV097_SET_TEXCOORD0_4S); //0x000015B0 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord1_2f[0]) == NV097_SET_TEXCOORD1_2F); //0x000015B8 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord1_2s) == NV097_SET_TEXCOORD1_2S);
+	// uint32_t Rev_15c4[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord1_4f[0]) == NV097_SET_TEXCOORD1_4F); // 0x000015C8 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord1_4s[0]) == NV097_SET_TEXCOORD1_4S); // 0x000015D8 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord2_2f[0]) == NV097_SET_TEXCOORD2_2F); // 0x000015E0 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord2_2s) == NV097_SET_TEXCOORD2_2S);
+	// uint32_t Rev_15ec[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord2_4f[0]) == NV097_SET_TEXCOORD2_4F); // 0x000015F0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord2_4s[0]) == NV097_SET_TEXCOORD2_4S); // 0x00001600 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord3_2f[0]) == NV097_SET_TEXCOORD3_2F); // 0x00001608 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord3_2s) == NV097_SET_TEXCOORD3_2S);
+	// uint32_t Rev_1614[0xc / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord3_4f[0]) == NV097_SET_TEXCOORD3_4F); // 0x00001620 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexcoord3_4s[0]) == NV097_SET_TEXCOORD3_4S); // 0x00001630 [2]
+	// uint32_t Rev_1638[0x60 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetFog1f) == NV097_SET_FOG1F);
+	static_assert(offsetof(NV097KelvinPrimitive, SetWeight1f) == NV097_SET_WEIGHT1F);
+	static_assert(offsetof(NV097KelvinPrimitive, SetWeight2f[0]) == NV097_SET_WEIGHT2F); // 0x000016A0 [2]
+	// uint32_t Rev_16a8[0x8 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetWeight3f[0]) == NV097_SET_WEIGHT3F); // 0x000016B0 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetEdgeFlag) == NV097_SET_EDGE_FLAG);
+	static_assert(offsetof(NV097KelvinPrimitive, SetWeight4f[0]) == NV097_SET_WEIGHT4F); // 0x000016C0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformFixedConst3[0]) == NV097_SET_TRANSFORM_FIXED_CONST3); // 0x000016D0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformFixedConst0[0]) == NV097_SET_TRANSFORM_FIXED_CONST0); // 0x000016E0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformFixedConst1[0]) == NV097_SET_TRANSFORM_FIXED_CONST1); // 0x000016F0 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformFixedConst2[0]) == NV097_SET_TRANSFORM_FIXED_CONST2); // 0x00001700 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, InvalidateVertexCacheFile) == NV097_INVALIDATE_VERTEX_CACHE_FILE);
+	static_assert(offsetof(NV097KelvinPrimitive, InvalidateVertexFile) == NV097_INVALIDATE_VERTEX_FILE);
+	static_assert(offsetof(NV097KelvinPrimitive, TlNop) == NV097_TL_NOP);
+	static_assert(offsetof(NV097KelvinPrimitive, TlSync) == NV097_TL_SYNC);
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexDataArrayOffset[0]) == NV097_SET_VERTEX_DATA_ARRAY_OFFSET); // 0x00001720 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexDataArrayFormat[0]) == NV097_SET_VERTEX_DATA_ARRAY_FORMAT); // 0x00001760 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackSceneAmbientColor[0]) == NV097_SET_BACK_SCENE_AMBIENT_COLOR); // 0x000017A0 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackMaterialAlpha) == NV097_SET_BACK_MATERIAL_ALPHA);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackMaterialEmission[0]) == NV097_SET_BACK_MATERIAL_EMISSIONR); // 0x000017B0 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLogicOpEnable) == NV097_SET_LOGIC_OP_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetLogicOp) == NV097_SET_LOGIC_OP);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTwoSidedLightEn) == NV097_SET_TWO_SIDED_LIGHT_EN);
+	static_assert(offsetof(NV097KelvinPrimitive, ClearReportValue) == NV097_CLEAR_REPORT_VALUE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetZpassPixelCountEnable) == NV097_SET_ZPASS_PIXEL_COUNT_ENABLE);
+	static_assert(offsetof(NV097KelvinPrimitive, GetReport) == NV097_GET_REPORT);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTLConstZero[0]) == NV097_SET_TL_CONST_ZERO); // 0x000017D4 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetEyeDirection[0]) == NV097_SET_EYE_DIRECTION); // 0x000017E0 [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetLinearFogConst[0]) == NV097_SET_LINEAR_FOG_CONST); // 0x000017EC [3]
+	static_assert(offsetof(NV097KelvinPrimitive, SetShaderClipPlaneMode) == NV097_SET_SHADER_CLIP_PLANE_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginEnd) == NV097_SET_BEGIN_END);
+	static_assert(offsetof(NV097KelvinPrimitive, ArrayElement16) == NV097_ARRAY_ELEMENT16); // 0x00001800
+	// uint32_t Rev_1804[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, ArrayElement32) == NV097_ARRAY_ELEMENT32); // 0x00001808
+	// uint32_t Rev_180c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, DrawArrays) == NV097_DRAW_ARRAYS); // 0x00001810
+	// uint32_t Rev_1814[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, InlineArray) == NV097_INLINE_ARRAY); // 0x00001818
+	static_assert(offsetof(NV097KelvinPrimitive, SetEyeVector[0]) == NV097_SET_EYE_VECTOR); // 0x0000181C [3]
+	static_assert(offsetof(NV097KelvinPrimitive, InlineVertexReuse) == NV097_INLINE_VERTEX_REUSE);
+	// uint32_t Rev_182c[0x54 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexData2f[0].M[0]) == NV097_SET_VERTEX_DATA2F_M); // 0x00001880 [16][2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexData2s[0]) == NV097_SET_VERTEX_DATA2S); // 0x00001900 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexData4ub[0]) == NV097_SET_VERTEX_DATA4UB); // 0x00001940 [16]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexData4s[0].M[0]) == NV097_SET_VERTEX_DATA4S_M); // 0x00001980 [16][2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetVertexData4f[0].M[0]) == NV097_SET_VERTEX_DATA4F_M); // 0x00001A00 [16][4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Offset) == NV097_SET_TEXTURE_OFFSET); // 0x00001B00
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Format) == NV097_SET_TEXTURE_FORMAT); // 0x00001B04
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Address) == NV097_SET_TEXTURE_ADDRESS); // 0x00001B08
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Control0) == NV097_SET_TEXTURE_CONTROL0); // 0x00001B0C
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Control1) == NV097_SET_TEXTURE_CONTROL1); // 0x00001B10
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Filter) == NV097_SET_TEXTURE_FILTER); // 0x00001B14
+	// uint32_t Rev_1b18[0x4 / 4];			//	0x00001B18 +i*0x40 			
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].ImageRect) == NV097_SET_TEXTURE_IMAGE_RECT); // 0x00001B1C
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].Palette) == NV097_SET_TEXTURE_PALETTE); // 0x00001B20
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].BorderColor) == NV097_SET_TEXTURE_BORDER_COLOR); // 0x00001B24
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvMat00) == NV097_SET_TEXTURE_SET_BUMP_ENV_MAT); // 0x00001B28
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvMat01) == NV097_SET_TEXTURE_SET_BUMP_ENV_MAT01); // 0x00001B2C
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvMat11) == NV097_SET_TEXTURE_SET_BUMP_ENV_MAT11); // 0x00001B30
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvMat10) == NV097_SET_TEXTURE_SET_BUMP_ENV_MAT10); // 0x00001B34
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvScale) == NV097_SET_TEXTURE_SET_BUMP_ENV_SCALE ); // 0x00001B38
+	static_assert(offsetof(NV097KelvinPrimitive, SetTexture[0].SetBumpEnvOffset) == NV097_SET_TEXTURE_SET_BUMP_ENV_OFFSET); // 0x00001B3C
+	// uint32_t Rev_1c00[0x164 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, ParkAttribute) == NV097_PARK_ATTRIBUTE); // 0x00001D64
+	static_assert(offsetof(NV097KelvinPrimitive, UnparkAttribute) == NV097_UNPARK_ATTRIBUTE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetSemaphoreOffset) == NV097_SET_SEMAPHORE_OFFSET);
+	static_assert(offsetof(NV097KelvinPrimitive, BackEndWriteSemaphoreRelease) == NV097_BACK_END_WRITE_SEMAPHORE_RELEASE);
+	static_assert(offsetof(NV097KelvinPrimitive, TextureReadSemaphoreRelease) == NV097_TEXTURE_READ_SEMAPHORE_RELEASE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetZMinMaxControl) == NV097_SET_ZMIN_MAX_CONTROL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetAntiAliasingControl) == NV097_SET_ANTI_ALIASING_CONTROL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetCompressZBufferEn) == NV097_SET_COMPRESS_ZBUFFER_EN);
+	static_assert(offsetof(NV097KelvinPrimitive, SetOccludeZStencilEn) == NV097_SET_OCCLUDE_ZSTENCIL_EN);
+	// uint32_t Rev_1d88[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetZStencilClearValue) == NV097_SET_ZSTENCIL_CLEAR_VALUE); // 0x00001D8C
+	static_assert(offsetof(NV097KelvinPrimitive, SetColorClearValue) == NV097_SET_COLOR_CLEAR_VALUE);
+	static_assert(offsetof(NV097KelvinPrimitive, ClearSurface) == NV097_CLEAR_SURFACE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetClearRectHorizontal) == NV097_SET_CLEAR_RECT_HORIZONTAL);
+	static_assert(offsetof(NV097KelvinPrimitive, SetClearRectVertical) == NV097_SET_CLEAR_RECT_VERTICAL); // 0x00001D9C
+	// uint32_t Rev_1da0[0x40 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginPatch0) == NV097_SET_BEGIN_PATCH0); // 0x00001DE0
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginPatch1) == NV097_SET_BEGIN_PATCH1);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginPatch2) == NV097_SET_BEGIN_PATCH2);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginPatch3) == NV097_SET_BEGIN_PATCH3);
+	static_assert(offsetof(NV097KelvinPrimitive, SetEndPatch) == NV097_SET_END_PATCH); // 0x00001DF0
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginEndSwatch) == NV097_SET_BEGIN_END_SWATCH);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginEndCurve) == NV097_SET_BEGIN_END_CURVE);
+	// uint32_t Rev_1dfc[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetCurveCoefficients[0]) == NV097_SET_CURVE_COEFFICIENTS); // 0x00001E00 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginTransition0) == NV097_SET_BEGIN_TRANSITION0);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginTransition1) == NV097_SET_BEGIN_TRANSITION1);
+	static_assert(offsetof(NV097KelvinPrimitive, SetBeginTransition2) == NV097_SET_BEGIN_TRANSITION2);
+	static_assert(offsetof(NV097KelvinPrimitive, SetEndTransition) == NV097_SET_END_TRANSITION);
+	static_assert(offsetof(NV097KelvinPrimitive, SetSpecularFogFactor[0]) == NV097_SET_SPECULAR_FOG_FACTOR); // 0x00001E20 [2]
+	static_assert(offsetof(NV097KelvinPrimitive, SetBackSpecularParams[0]) == NV097_SET_BACK_SPECULAR_PARAMS); // 0x00001E28 [6]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerColorOCW[0]) == NV097_SET_COMBINER_COLOR_OCW); // 0x00001E28 [8]
+	static_assert(offsetof(NV097KelvinPrimitive, SetCombinerControl) == NV097_SET_COMBINER_CONTROL);
+	// uint32_t Rev_1e64[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetShadowZSlopeThreshold) == NV097_SET_SHADOW_ZSLOPE_THRESHOLD); // 0x00001E68
+	static_assert(offsetof(NV097KelvinPrimitive, SetShadowDepthFunc) == NV097_SET_SHADOW_DEPTH_FUNC);
+	static_assert(offsetof(NV097KelvinPrimitive, SetShaderStageProgram) == NV097_SET_SHADER_STAGE_PROGRAM);
+	static_assert(offsetof(NV097KelvinPrimitive, SetDotRGBMapping) == NV097_SET_DOT_RGBMAPPING);
+	static_assert(offsetof(NV097KelvinPrimitive, SetShaderOtherStageInput) == NV097_SET_SHADER_OTHER_STAGE_INPUT); // 0x00001E78
+	// uint32_t Rev_1e7c[0x4 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformData[0]) == NV097_SET_TRANSFORM_DATA); // 0x00001E80 [4]
+	static_assert(offsetof(NV097KelvinPrimitive, LaunchTransformProgram) == NV097_LAUNCH_TRANSFORM_PROGRAM);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformExecutionMode) == NV097_SET_TRANSFORM_EXECUTION_MODE);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformProgramCxtWriteEn) == NV097_SET_TRANSFORM_PROGRAM_CXT_WRITE_EN);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformProgramLoad) == NV097_SET_TRANSFORM_PROGRAM_LOAD);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformProgramStart) == NV097_SET_TRANSFORM_PROGRAM_START);
+	static_assert(offsetof(NV097KelvinPrimitive, SetTransformConstantLoad) == NV097_SET_TRANSFORM_CONSTANT_LOAD); // 0x00001EA4
+	// uint32_t Rev_1ea8[0x118 / 4];
+	static_assert(offsetof(NV097KelvinPrimitive, DebugInit[0]) == NV097_DEBUG_INIT); // 0x00001FC0 [10]
+	// uint32_t Rev_1fe8[0x18 / 4];
+}
+
 //method count always represnt total dword needed as the arguments following the method.
 //caller must ensure there are enough argements available in argv.
 int pgraph_handle_method(
@@ -1197,7 +1512,6 @@ int pgraph_handle_method(
 
     ContextSurfaces2DState *context_surfaces_2d = &pg->context_surfaces_2d;
     ImageBlitState *image_blit = &pg->image_blit;
-    KelvinState *kelvin = &pg->kelvin;
 
     assert(subchannel < 8);
     //xbox d3d binds subchannel with graphic class in CDeivice_CreateDevice(). in the beginning,
@@ -1491,14 +1805,7 @@ int pgraph_handle_method(
 		 
             //2nd round, handle special cases, setup bit mask flags, setup pgraph internal state vars, 
             switch (method) {
-                case NV097_SET_OBJECT://done
-                    assert(arg0 == pg->KelvinPrimitive.SetObject);
-                    kelvin->object_instance = arg0;
-                    break;
-
                 case NV097_NO_OPERATION://done
-					//disable the assert, for NV097_NO_OPERATION, it's used as short jump, it requires special handling. no memcpy in 1st round.
-					//assert(arg0 == pg->KelvinPrimitive.NoOperation);
                     /* The bios uses nop as a software method call -
                      * it seems to expect a notify interrupt if the parameter isn't 0.
                      * According to a nouveau guy it should still be a nop regardless
@@ -1559,27 +1866,22 @@ int pgraph_handle_method(
                     break;
 
                 case NV097_WAIT_FOR_IDLE://done  //this method is used to wait for NV2A state machine to sync to pushbuffer.
-                    assert(arg0 == pg->KelvinPrimitive.WaitForIdle);
                     pgraph_update_surface(d, false, true, true);
                     break;
 
                 case NV097_SET_FLIP_READ://done  //pg->KelvinPrimitive.SetFlipRead
-                    assert(arg0 == pg->KelvinPrimitive.SetFlipRead);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SURFACE / 4], NV_PGRAPH_SURFACE_READ_3D,
                     //    arg0);
                     break;
                 case NV097_SET_FLIP_WRITE://done  //pg->KelvinPrimitive.SetFlipWrite
-                    assert(arg0 == pg->KelvinPrimitive.SetFlipWrite);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SURFACE / 4], NV_PGRAPH_SURFACE_WRITE_3D,
                     //    arg0);
                     break; 
                 case NV097_SET_FLIP_MODULO://done  //pg->KelvinPrimitive.SetFlipModulo
-                    assert(arg0 == pg->KelvinPrimitive.SetFlipModulo);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SURFACE / 4], NV_PGRAPH_SURFACE_MODULO_3D,
                     //    arg0);
                     break;
                 case NV097_FLIP_INCREMENT_WRITE: {//done
-                    assert(arg0 == pg->KelvinPrimitive.FlipIncrementWrite);
                     NV2A_DPRINTF("flip increment write %d -> ",
 						pg->KelvinPrimitive.SetFlipWrite);
 					pg->KelvinPrimitive.SetFlipWrite=
@@ -1595,7 +1897,6 @@ int pgraph_handle_method(
 						break;
 					}
 				case NV097_FLIP_STALL://done
-                    assert(arg0 == pg->KelvinPrimitive.FlipStall);
                     pgraph_update_surface(d, false, true, true);
                     // TODO: Fix this (why does it hang?)
                     /* while (true) */ {
@@ -1615,41 +1916,12 @@ int pgraph_handle_method(
                     NV2A_DPRINTF("flip stall done\n");
                     break;
 
-                case NV097_SET_CONTEXT_DMA_NOTIFIES://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaNotifies); // Was pg->dma_notifies = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_A://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaA); // Was pg->dma_a = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_B://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaB); // Was pg->dma_b = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_STATE://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaState); // Was pg->dma_state = arg0;
-                    break;
                 case NV097_SET_CONTEXT_DMA_COLOR://done
                     /* try to get any straggling draws in before the surface's changed :/ */
                     pgraph_update_surface(d, false, true, true); // TODO : Move actions-before-writes to, well : before the (generic) write!
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaColor); // Was pg->dma_color = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_ZETA://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaZeta); // Was pg->dma_zeta = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_VERTEX_A://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaVertexA); // Was pg->dma_vertex_a = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_VERTEX_B://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaVertexB); // Was pg->dma_vertex_b = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_SEMAPHORE://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaSemaphore);// Was pg->dma_semaphore = arg0;
-                    break;
-                case NV097_SET_CONTEXT_DMA_REPORT://done
-                    assert(arg0 == pg->KelvinPrimitive.SetContextDmaReport); // Was pg->dma_report = arg0;
                     break;
 
                 case NV097_SET_SURFACE_CLIP_HORIZONTAL://done KelvinPrimitive.SetSurfaceClipHorizontal could use union with word ClipX, ClipWidth
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfaceClipHorizontal);
                     pgraph_update_surface(d, false, true, true);
                     pg->surface_shape.clip_x =
                         GET_MASK(arg0, NV097_SET_SURFACE_CLIP_HORIZONTAL_X);
@@ -1657,7 +1929,6 @@ int pgraph_handle_method(
                         GET_MASK(arg0, NV097_SET_SURFACE_CLIP_HORIZONTAL_WIDTH);
                     break;
                 case NV097_SET_SURFACE_CLIP_VERTICAL://done KelvinPrimitive.SetSurfaceClipVertical could use union with word ClipY, ClipHeight
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfaceClipVertical);
                     pgraph_update_surface(d, false, true, true);
                     pg->surface_shape.clip_y =
                         GET_MASK(arg0, NV097_SET_SURFACE_CLIP_VERTICAL_Y);
@@ -1665,9 +1936,7 @@ int pgraph_handle_method(
                         GET_MASK(arg0, NV097_SET_SURFACE_CLIP_VERTICAL_HEIGHT);
                     break;
                 case NV097_SET_SURFACE_FORMAT://done
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfaceFormat);
                     pgraph_update_surface(d, false, true, true);
-
                     pg->surface_shape.color_format =
                         GET_MASK(arg0, NV097_SET_SURFACE_FORMAT_COLOR);
                     pg->surface_shape.zeta_format =
@@ -1682,9 +1951,7 @@ int pgraph_handle_method(
                         GET_MASK(arg0, NV097_SET_SURFACE_FORMAT_HEIGHT);
                     break;
                 case NV097_SET_SURFACE_PITCH://done
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfacePitch);
                     pgraph_update_surface(d, false, true, true);
-
                     pg->surface_color.pitch =
                         GET_MASK(arg0, NV097_SET_SURFACE_PITCH_COLOR);
                     pg->surface_zeta.pitch =
@@ -1693,35 +1960,17 @@ int pgraph_handle_method(
                     pg->surface_zeta.buffer_dirty = true;
                     break;
                 case NV097_SET_SURFACE_COLOR_OFFSET://done
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfaceColorOffset);
                     pgraph_update_surface(d, false, true, true);
-
                     pg->surface_color.offset = arg0;
                     pg->surface_color.buffer_dirty = true;
                     break;
                 case NV097_SET_SURFACE_ZETA_OFFSET://done
-                    assert(arg0 == pg->KelvinPrimitive.SetSurfaceZetaOffset);
                     pgraph_update_surface(d, false, true, true);
-
                     pg->surface_zeta.offset = arg0;
                     pg->surface_zeta.buffer_dirty = true;
                     break;
 
-                CASE_8(NV097_SET_COMBINER_ALPHA_ICW, 4) ://done
-                        //slot = (method - NV097_SET_COMBINER_ALPHA_ICW) / 4;
-                    //pg->pgraph_regs[NV_PGRAPH_COMBINEALPHAI0/4 + slot * 4] = parameter;
-                    break;
-
-                case NV097_SET_COMBINER_SPECULAR_FOG_CW0://done
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerSpecularFogCW0); // Was pg->pgraph_regs[NV_PGRAPH_COMBINESPECFOG0/4] = parameter;
-                    break;
-
-                case NV097_SET_COMBINER_SPECULAR_FOG_CW1://done
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerSpecularFogCW1); // Was pg->pgraph_regs[NV_PGRAPH_COMBINESPECFOG1/4] = parameter;
-                    break;
-
                 case NV097_SET_CONTROL0: {//done  //pg->KelvinPrimitive.SetControl0& NV097_SET_CONTROL0_COLOR_SPACE_CONVERT GET_MASK(pg->KelvinPrimitive.SetControl0, NV097_SET_CONTROL0_COLOR_SPACE_CONVERT)
-                    assert(arg0 == pg->KelvinPrimitive.SetControl0);
                     pgraph_update_surface(d, false, true, true);
 
                     //bool stencil_write_enable =
@@ -1748,21 +1997,7 @@ int pgraph_handle_method(
                     break;
                 }
 
-                case NV097_SET_COLOR_MATERIAL: {//done
-                    assert(arg0 == pg->KelvinPrimitive.SetColorMaterial);
-                    //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4], NV_PGRAPH_CSV0_C_EMISSION,  //(pg->KelvinPrimitive.SetColorMaterial >> 0) & 3)
-                    //	(arg0 >> 0) & 3);
-                    //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4], NV_PGRAPH_CSV0_C_AMBIENT,  //(pg->KelvinPrimitive.SetColorMaterial >> 2) & 3)
-                    //	(arg0 >> 2) & 3);
-                    //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4], NV_PGRAPH_CSV0_C_DIFFUSE,  //(pg->KelvinPrimitive.SetColorMaterial >> 4) & 3)
-                    //	(arg0 >> 4) & 3);
-                    //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4], NV_PGRAPH_CSV0_C_SPECULAR,  //(pg->KelvinPrimitive.SetColorMaterial >> 6) & 3
-                    //	(arg0 >> 6) & 3);
-                    break;
-                }
-
                 case NV097_SET_FOG_MODE: {//done //pg->KelvinPrimitive.SetFogMode
-                    assert(arg0 == pg->KelvinPrimitive.SetFogMode);
                     /* FIXME: There is also NV_PGRAPH_CSV0_D_FOG_MODE */
                     unsigned int mode;
                     switch (arg0) {
@@ -1789,7 +2024,6 @@ int pgraph_handle_method(
                     break;
                 }
                 case NV097_SET_FOG_GEN_MODE: {//done //pg->KelvinPrimitive.SetFogGenMode
-                    assert(arg0 == pg->KelvinPrimitive.SetFogGenMode);
                     unsigned int mode; 
                     switch (arg0) {
                     case NV097_SET_FOG_GEN_MODE_V_SPEC_ALPHA:
@@ -1819,107 +2053,83 @@ int pgraph_handle_method(
                     */
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_3 / 4], NV_PGRAPH_CONTROL_3_FOGENABLE,
                     //	arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetFogEnable);
                     break;
-                case NV097_SET_FOG_COLOR: {//done //pg->KelvinPrimitive.SetFogColor
-                    assert(arg0 == pg->KelvinPrimitive.SetFogColor);
-                    break;
-                }
 
                 case NV097_SET_WINDOW_CLIP_TYPE://done //pg->KelvinPrimitive.SetWindowClipType
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                         //NV_PGRAPH_SETUPRASTER_WINDOWCLIPTYPE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetWindowClipType);
                     break;
 
                 case NV097_SET_ALPHA_TEST_ENABLE://D3DRS_CULLMODE //pg->KelvinPrimitive.SetAlphaTestEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4],
                     //	NV_PGRAPH_CONTROL_0_ALPHATESTENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetAlphaTestEnable);
 					break;
 
                 case NV097_SET_BLEND_ENABLE://D3DRS_ALPHABLENDENABLE //pg->KelvinPrimitive.SetBlendEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_BLEND / 4], NV_PGRAPH_BLEND_EN, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetBlendEnable);
 					break;
 
                 case NV097_SET_CULL_FACE_ENABLE://D3DRS_CULLMODE //pg->KelvinPrimitive.SetCullFaceEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_CULLENABLE,
                     //	arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetCullFaceEnable);
 					break;
                 case NV097_SET_DEPTH_TEST_ENABLE://done //pg->KelvinPrimitive.SetDepthTestEnable
                     // Test-case : Whiplash
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4], NV_PGRAPH_CONTROL_0_ZENABLE,
                     //	arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetDepthTestEnable);
                     break;
                 case NV097_SET_DITHER_ENABLE://done //pg->KelvinPrimitive.SetDitherEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4],
                     //	NV_PGRAPH_CONTROL_0_DITHERENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetDitherEnable);
                     break;
                 case NV097_SET_LIGHTING_ENABLE://done //pg->KelvinPrimitive.SetLightingEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4], NV_PGRAPH_CSV0_C_LIGHTING,
                     //	arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetLightingEnable);
 					break;
                 case NV097_SET_POINT_PARAMS_ENABLE://done //pg->KelvinPrimitive.SetPointParamsEnable
                     //this state is not used yet.
-                    assert(arg0 == pg->KelvinPrimitive.SetPointParamsEnable);
                     break;
                 case NV097_SET_POINT_SMOOTH_ENABLE://done //pg->KelvinPrimitive.SetPointSmoothEnable
-                    assert(arg0 == pg->KelvinPrimitive.SetPointSmoothEnable);
                     //this state is not used yet.
                     break;
                 case NV097_SET_LINE_SMOOTH_ENABLE://done //pg->KelvinPrimitive.SetLineSmoothEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_LINESMOOTHENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetLineSmoothEnable);
                     break;
                 case NV097_SET_POLY_SMOOTH_ENABLE://done //pg->KelvinPrimitive.SetPolySmoothEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_POLYSMOOTHENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetPolySmoothEnable);
                     break;
                 case NV097_SET_SKIN_MODE://done //pg->KelvinPrimitive.SetSkinMode
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_D / 4], NV_PGRAPH_CSV0_D_SKIN,
                     //	arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetSkinMode);
                     break;
                 case NV097_SET_STENCIL_TEST_ENABLE://done //pg->KelvinPrimitive.SetStencilTestEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_1 / 4],
                     //	NV_PGRAPH_CONTROL_1_STENCIL_TEST_ENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilTestEnable);
                     break;
                 case NV097_SET_POLY_OFFSET_POINT_ENABLE://done //pg->KelvinPrimitive.SetPolyOffsetPointEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_POFFSETPOINTENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetPolyOffsetPointEnable);
                     break;
                 case NV097_SET_POLY_OFFSET_LINE_ENABLE://done //pg->KelvinPrimitive.SetPolyOffsetLineEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_POFFSETLINEENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetPolyOffsetLineEnable);
                     break;
                 case NV097_SET_POLY_OFFSET_FILL_ENABLE://done //pg->KelvinPrimitive.SetPolyOffsetFillEnable
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_POFFSETFILLENABLE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetPolyOffsetFillEnable);
                     break;
                 case NV097_SET_ALPHA_FUNC://done //pg->KelvinPrimitive.SetAlphaFunc
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4],
                     //	NV_PGRAPH_CONTROL_0_ALPHAFUNC, arg0 & 0xF);
-                    assert(arg0 == pg->KelvinPrimitive.SetAlphaFunc);
                     break;
                 case NV097_SET_ALPHA_REF://done //pg->KelvinPrimitive.SetAlphaRef
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4],
                     //	NV_PGRAPH_CONTROL_0_ALPHAREF, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetAlphaRef);
                     break;
                 case NV097_SET_BLEND_FUNC_SFACTOR: {//done //pg->KelvinPrimitive.SetBlendFuncSfactor
-                    assert(arg0 == pg->KelvinPrimitive.SetBlendFuncSfactor);
                     unsigned int factor=arg0;
                     if (factor > 15) {
                         fprintf(stderr, "Unknown blend source factor: 0x%x, reset to NV_PGRAPH_BLEND_SFACTOR_ZERO\n", arg0);
@@ -1933,7 +2143,6 @@ int pgraph_handle_method(
                 }
 
                 case NV097_SET_BLEND_FUNC_DFACTOR: {//done //pg->KelvinPrimitive.SetBlendFuncDfactor
-                    assert(arg0 == pg->KelvinPrimitive.SetBlendFuncDfactor);
                     unsigned int factor=arg0;
                     switch (arg0) {
                     case NV097_SET_BLEND_FUNC_DFACTOR_V_ZERO:
@@ -1979,11 +2188,9 @@ int pgraph_handle_method(
 
                 case NV097_SET_BLEND_COLOR://done //pg->KelvinPrimitive.SetBlendColor
                     //pg->pgraph_regs[NV_PGRAPH_BLENDCOLOR/4] = parameter;
-                    assert(arg0 == pg->KelvinPrimitive.SetBlendColor);
                     break;
 
                 case NV097_SET_BLEND_EQUATION: {//done //pg->KelvinPrimitive.SetBlendEquation
-                    assert(arg0 == pg->KelvinPrimitive.SetBlendEquation);
                     unsigned int equation;
                     switch (arg0) {
                     case NV097_SET_BLEND_EQUATION_V_FUNC_SUBTRACT:
@@ -2015,11 +2222,9 @@ int pgraph_handle_method(
                     // Test-case : Whiplash
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4], NV_PGRAPH_CONTROL_0_ZFUNC,
                     //	arg0 & 0xF);
-                    assert(arg0 == pg->KelvinPrimitive.SetDepthFunc);
                     break;
 
                 case NV097_SET_COLOR_MASK: {//done //pg->KelvinPrimitive.SetColorMask
-                    assert(arg0 == pg->KelvinPrimitive.SetColorMask);
                     pg->surface_color.write_enabled_cache |= pgraph_get_color_write_enabled(pg);
 
                     bool alpha = arg0 & NV097_SET_COLOR_MASK_ALPHA_WRITE_ENABLE;
@@ -2037,7 +2242,6 @@ int pgraph_handle_method(
                     break;
                 }
                 case NV097_SET_DEPTH_MASK://done //pg->KelvinPrimitive.SetDepthMask
-                    assert(arg0 == pg->KelvinPrimitive.SetDepthMask);
                     pg->surface_zeta.write_enabled_cache |= pgraph_get_zeta_write_enabled(pg);
 
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_0 / 4],
@@ -2046,77 +2250,44 @@ int pgraph_handle_method(
                 case NV097_SET_STENCIL_MASK://done //pg->KelvinPrimitive.SetStencilMask
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_1 / 4],
                     //	NV_PGRAPH_CONTROL_1_STENCIL_MASK_WRITE, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilMask);
                     break;
                 case NV097_SET_STENCIL_FUNC://done //pg->KelvinPrimitive.SetStencilFunc
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_1 / 4],
                         //NV_PGRAPH_CONTROL_1_STENCIL_FUNC, arg0 & 0xF);
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilFunc);
                     break;
                 case NV097_SET_STENCIL_FUNC_REF://done //pg->KelvinPrimitive.SetStencilFuncRef
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_1 / 4],
                     //	NV_PGRAPH_CONTROL_1_STENCIL_REF, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilFuncRef);
                     break;
                 case NV097_SET_STENCIL_FUNC_MASK://done //pg->KelvinPrimitive.SetStencilFuncMask
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_1 / 4],
                         //NV_PGRAPH_CONTROL_1_STENCIL_MASK_READ, arg0);
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilFuncMask);
                     break;
                 case NV097_SET_STENCIL_OP_FAIL://done //pg->KelvinPrimitive.SetStencilOpFail
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_2 / 4],
                         //NV_PGRAPH_CONTROL_2_STENCIL_OP_FAIL,
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilOpFail);
                     break;
                 case NV097_SET_STENCIL_OP_ZFAIL://done //pg->KelvinPrimitive.SetStencilOpZfail
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_2 / 4],
                         //NV_PGRAPH_CONTROL_2_STENCIL_OP_ZFAIL,
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilOpZfail);
                     break;
                 case NV097_SET_STENCIL_OP_ZPASS://done //pg->KelvinPrimitive.SetStencilOpZpass
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CONTROL_2 / 4],
                         //NV_PGRAPH_CONTROL_2_STENCIL_OP_ZPASS,
-                    assert(arg0 == pg->KelvinPrimitive.SetStencilOpZpass);
-                    break;
-
-                case NV097_SET_SHADE_MODE://done //pg->KelvinPrimitive.SetShadeMode
-                    assert(arg0 == pg->KelvinPrimitive.SetShadeMode);
-                    break;
-
-                case NV097_SET_LINE_WIDTH://done //pg->KelvinPrimitive.SetLineWidth
-                    assert(arg0 == pg->KelvinPrimitive.SetLineWidth);
-                    break;
-
-                case NV097_SET_POLYGON_OFFSET_SCALE_FACTOR://done //pg->KelvinPrimitive.SetPolygonOffsetScaleFactor
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetPolygonOffsetScaleFactor);
-                    break;
-
-                case NV097_SET_POLYGON_OFFSET_BIAS://done //pg->KelvinPrimitive.SetPolygonOffsetBias
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetPolygonOffsetBias);
                     break;
 
                 case NV097_SET_FRONT_POLYGON_MODE://done //pg->KelvinPrimitive.SetFrontPolygonMode
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_FRONTFACEMODE,
                     //	kelvin_map_polygon_mode(arg0));
-                    assert(arg0 == pg->KelvinPrimitive.SetFrontPolygonMode);
                     break;
                 case NV097_SET_BACK_POLYGON_MODE://done //pg->KelvinPrimitive.SetBackPolygonMode
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_SETUPRASTER / 4],
                     //	NV_PGRAPH_SETUPRASTER_BACKFACEMODE,
                     //	kelvin_map_polygon_mode(arg0));
-                    assert(arg0 == pg->KelvinPrimitive.SetBackPolygonMode);
-                    break;
-                case NV097_SET_CLIP_MIN://done //pg->KelvinPrimitive.SetClipMin
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetClipMin);
-                    break;
-
-                case NV097_SET_CLIP_MAX://done //pg->KelvinPrimitive.SetClipMax
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetClipMax);
                     break;
 
                 case NV097_SET_CULL_FACE: {//done //pg->KelvinPrimitive.SetCullFace
-                    assert(arg0 == pg->KelvinPrimitive.SetCullFace);
                     unsigned int face=arg0;
                     switch (arg0) {
                     case NV097_SET_CULL_FACE_V_FRONT:
@@ -2137,7 +2308,6 @@ int pgraph_handle_method(
                     break;
                 }
                 case NV097_SET_FRONT_FACE: {//done //pg->KelvinPrimitive.SetFrontFace
-                    assert(arg0 == pg->KelvinPrimitive.SetFrontFace);
                     bool ccw;
                     switch (arg0) {
                     case NV097_SET_FRONT_FACE_V_CW:
@@ -2157,29 +2327,17 @@ int pgraph_handle_method(
                     break;
                 }
                 case NV097_SET_NORMALIZATION_ENABLE://done //pg->KelvinPrimitive.SetNormalizationEnable
-                    assert(arg0 == pg->KelvinPrimitive.SetNormalizationEnable);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_C / 4],
                     //	NV_PGRAPH_CSV0_C_NORMALIZATION_ENABLE,
                     //	arg0);
                     break;
 
-                CASE_3(NV097_SET_MATERIAL_EMISSION, 4)://done //pg->KelvinPrimitive.SetMaterialEmission[3]
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetMaterialEmission[slot]);
-                    break;
-                case NV097_SET_MATERIAL_ALPHA://done //pg->KelvinPrimitive.SetMaterialAlpha
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetMaterialAlpha);
-                    break;
-                case NV097_SET_SPECULAR_ENABLE : break;//done //pg->KelvinPrimitive.SetSpecularEnable
-                    assert(arg0 == pg->KelvinPrimitive.SetSpecularEnable);
-                    break;
                 case NV097_SET_LIGHT_ENABLE_MASK://done //pg->KelvinPrimitive.SetLightEnableMask
-                    assert(arg0 == pg->KelvinPrimitive.SetLightEnableMask);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_D / 4], NV_PGRAPH_CSV0_D_LIGHTS, arg0);
                     break;
 
                 CASE_4(NV097_SET_TEXGEN_S, 16) : {//done //pg->KelvinPrimitive.SetTexgen[2].S  {S,T,R,Q}
                     slot = (method - NV097_SET_TEXGEN_S) / 16; //slot is 0 or 1
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetTexgen[slot].S);
                     //unsigned int reg = (slot <2) ? NV_PGRAPH_CSV1_A / 4
                     //	: NV_PGRAPH_CSV1_B / 4;
                     //unsigned int mask = (slot % 2) ? NV_PGRAPH_CSV1_A_T1_S
@@ -2190,7 +2348,6 @@ int pgraph_handle_method(
                 }
                 CASE_4(NV097_SET_TEXGEN_T, 16) : {//done //pg->KelvinPrimitive.SetTexgen[2].T  {S,T,R,Q}
                     slot = (method - NV097_SET_TEXGEN_T) / 16;
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetTexgen[slot].T);
                     //unsigned int reg = (slot < 2) ? NV_PGRAPH_CSV1_A / 4
                     //	: NV_PGRAPH_CSV1_B / 4;
                     //unsigned int mask = (slot % 2) ? NV_PGRAPH_CSV1_A_T1_T
@@ -2201,7 +2358,6 @@ int pgraph_handle_method(
                 }
                 CASE_4(NV097_SET_TEXGEN_R, 16) : {//done //pg->KelvinPrimitive.SetTexgen[2].R  {S,T,R,Q}
                     slot = (method - NV097_SET_TEXGEN_R) / 16;
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetTexgen[slot].R);
                     //unsigned int reg = (slot < 2) ? NV_PGRAPH_CSV1_A / 4
                     //	: NV_PGRAPH_CSV1_B / 4;
                     //unsigned int mask = (slot % 2) ? NV_PGRAPH_CSV1_A_T1_R
@@ -2212,7 +2368,6 @@ int pgraph_handle_method(
                 }
                 CASE_4(NV097_SET_TEXGEN_Q, 16) : {//done //pg->KelvinPrimitive.SetTexgen[2].Q  {S,T,R,Q}
                     slot = (method - NV097_SET_TEXGEN_Q) / 16;
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetTexgen[slot].Q);
                     //original code uses condition slot < 2 , then NV_PGRAPH_CSV1_A will always be used.
                     //unsigned int reg = (slot < 2) ? NV_PGRAPH_CSV1_A / 4
                     //	: NV_PGRAPH_CSV1_B / 4;
@@ -2224,23 +2379,16 @@ int pgraph_handle_method(
                 }
                 CASE_4(NV097_SET_TEXTURE_MATRIX_ENABLE, 4) ://done //pg->KelvinPrimitive.SetTextureMatrixEnable[4]
                     slot = (method - NV097_SET_TEXTURE_MATRIX_ENABLE) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetTextureMatrixEnable[slot]);
                     //pg->texture_matrix_enable[slot] = arg0;
-                    break;
-
-                case NV097_SET_POINT_SIZE://done //pg->KelvinPrimitive.SetPointSize
-                    assert(arg0 == pg->KelvinPrimitive.SetPointSize);
                     break;
 
                 CASE_16(NV097_SET_PROJECTION_MATRIX, 4) : {//done //pg->KelvinPrimitive.SetProjectionMatrix[16]
                     //KelvinPrimitive.SetProjectionMatrix[] is update already. we update the vertex shader contant as well.
 					slot = (method - NV097_SET_PROJECTION_MATRIX) / 4;
-                    // TODO : float assert(arg0 == pg->KelvinPrimitive.SetProjectionMatrix[slot]);
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
                         // pg->projection_matrix[slot] = *(float*)&parameter;
                         unsigned int row = NV_IGRAPH_XF_XFCTX_PMAT0 + slot / 4;
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetProjectionMatrix[slot])));
                         pg->vsh_constants[row][slot % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
@@ -2256,7 +2404,6 @@ int pgraph_handle_method(
                         //matnum = argc / 16;
 						unsigned int entry = slot % 16;
                         unsigned int row = NV_IGRAPH_XF_XFCTX_MMAT0 + matnum * 4 + entry / 4;
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetModelViewMatrix[matnum][entry])));
                         pg->vsh_constants[row][entry % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
@@ -2273,7 +2420,6 @@ int pgraph_handle_method(
                         arg0 = argv[argc];
                         unsigned int entry = slot % 16;
                         unsigned int row = NV_IGRAPH_XF_XFCTX_IMMAT0 + matnum * 4 + entry / 4;
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetInverseModelViewMatrix[matnum][entry])));
                         pg->vsh_constants[row][entry % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
@@ -2288,7 +2434,6 @@ int pgraph_handle_method(
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
                         unsigned int row = NV_IGRAPH_XF_XFCTX_CMAT0 + slot / 4;
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetCompositeMatrix[slot])));
                         pg->vsh_constants[row][slot % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
@@ -2305,7 +2450,6 @@ int pgraph_handle_method(
                         unsigned int tex = slot / 16;
                         unsigned int entry = slot % 16;
                         unsigned int row = NV_IGRAPH_XF_XFCTX_T0MAT + tex * 8 + entry / 4;
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetTextureMatrix[tex][entry % 4])));
                         pg->vsh_constants[row][entry % 4] = arg0;
                         pg->vsh_constants_dirty[row] = true;
                     }
@@ -2331,7 +2475,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_FOG_PARAMS) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetFogParams[slot])));
                         /* Cxbx note: slot = 2 is right after slot = 1 */
                         pg->ltctxa[NV_IGRAPH_XF_LTCTXA_FOG_K][slot] = arg0;
                         pg->ltctxa_dirty[NV_IGRAPH_XF_LTCTXA_FOG_K] = true;
@@ -2339,7 +2482,6 @@ int pgraph_handle_method(
                     break;
 
                 case NV097_SET_TEXGEN_VIEW_MODEL://done //pg->KelvinPrimitive.SetTexgenViewModel
-                    assert(arg0 == pg->KelvinPrimitive.SetTexgenViewModel);
                     //SET_MASK(pg->pgraph_regs[NV_PGRAPH_CSV0_D / 4], NV_PGRAPH_CSV0_D_TEXGEN_REF,
                     //	arg0);
                     break;
@@ -2349,7 +2491,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_FOG_PLANE) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];                        
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetFogPlane[slot])));
                         pg->vsh_constants[NV_IGRAPH_XF_XFCTX_FOG][slot] = arg0;
                         pg->vsh_constants_dirty[NV_IGRAPH_XF_XFCTX_FOG] = true;
                     }
@@ -2360,19 +2501,10 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_SPECULAR_PARAMS) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetSpecularParams[slot])));
                     // this state is not implemented yet.
                         //pg->ltctxa[NV_IGRAPH_XF_LTCTXA_FR_AMB][slot] = arg0;
                         //pg->ltctxa_dirty[NV_IGRAPH_XF_LTCTXA_FR_AMB] = true;
                     }
-                    break;
-
-                case NV097_SET_SWATH_WIDTH://not implement //pg->KelvinPrimitive.SetSwathWidth
-                    assert(arg0 == pg->KelvinPrimitive.SetSwathWidth);
-                    break;
-
-                case NV097_SET_FLAT_SHADE_OP: break;//not implement //pg->KelvinPrimitive.SetFlatShadeOp
-                    assert(arg0 == pg->KelvinPrimitive.SetFlatShadeOp);
                     break;
 
                 CASE_3(NV097_SET_SCENE_AMBIENT_COLOR, 4) ://done //pg->KelvinPrimitive.SetSceneAmbientColor[3]
@@ -2380,7 +2512,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_SCENE_AMBIENT_COLOR) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetSceneAmbientColor[slot])));
                         pg->ltctxa[NV_IGRAPH_XF_LTCTXA_FR_AMB][slot] = arg0;
                         pg->ltctxa_dirty[NV_IGRAPH_XF_LTCTXA_FR_AMB] = true;
                     }
@@ -2391,7 +2522,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_VIEWPORT_OFFSET) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetViewportOffset[slot])));
                         pg->vsh_constants[NV_IGRAPH_XF_XFCTX_VPOFF][slot] = arg0;
                         pg->vsh_constants_dirty[NV_IGRAPH_XF_XFCTX_VPOFF] = true;
                     }
@@ -2402,7 +2532,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_VIEWPORT_OFFSET) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetPointParams[slot])));
                     //this state is not implement yet.
                         //pg->vsh_constants[NV_IGRAPH_XF_XFCTX_VPOFF][slot] = arg0;
                         //pg->vsh_constants_dirty[NV_IGRAPH_XF_XFCTX_VPOFF] = true;
@@ -2414,7 +2543,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_EYE_POSITION) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetEyePosition[slot])));
                         pg->vsh_constants[NV_IGRAPH_XF_XFCTX_EYEP][slot] = arg0;
                         pg->vsh_constants_dirty[NV_IGRAPH_XF_XFCTX_EYEP] = true;
                     }
@@ -2425,32 +2553,27 @@ int pgraph_handle_method(
                     //for (int argc = 0; argc < method_count; argc++,slot++) {
                     //	arg0 = argv[argc];
                     slot = (method - NV097_SET_COMBINER_FACTOR0) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerFactor0[slot]);
                     //	pg->pgraph_regs[NV_PGRAPH_COMBINEFACTOR0/ 4 + slot * 4] = arg0;
                     //}
                     break;
 
                 CASE_8(NV097_SET_COMBINER_FACTOR1, 4) ://done //pg->KelvinPrimitive.SetCombinerFactor1[8]
                     slot = (method - NV097_SET_COMBINER_FACTOR1) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerFactor1[slot]);
                     //pg->pgraph_regs[NV_PGRAPH_COMBINEFACTOR1/ 4 + slot * 4] = arg0;
                     break;
 
                 CASE_8(NV097_SET_COMBINER_ALPHA_OCW, 4) ://done //pg->KelvinPrimitive.SetCombinerAlphaOCW[8]
                     slot = (method - NV097_SET_COMBINER_ALPHA_OCW) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerAlphaOCW[slot]);
                     //pg->pgraph_regs[NV_PGRAPH_COMBINEALPHAO0/ 4 + slot * 4] = arg0;
                     break;
 
                 CASE_8(NV097_SET_COMBINER_COLOR_ICW, 4) ://done //pg->KelvinPrimitive.SetCombinerColorICW[8]
                     slot = (method - NV097_SET_COMBINER_COLOR_ICW) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetCombinerColorICW[slot]);
                     //pg->pgraph_regs[NV_PGRAPH_COMBINECOLORI0/ 4 + slot * 4] = arg0;
                     break;
 
                 CASE_4(NV097_SET_COLOR_KEY_COLOR, 4) ://done //pg->KelvinPrimitive.SetColorKeyColor[4]
                     slot = (method - NV097_SET_COMBINER_COLOR_ICW) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetColorKeyColor[slot]);
                     //pg->pgraph_regs[NV_PGRAPH_COMBINECOLORI0/ 4 + slot * 4] = arg0;
                 //this state is not implement yet.
                     break;
@@ -2460,7 +2583,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_VIEWPORT_SCALE) / 4;
 					for (int argc = 0; argc < method_count; argc++, slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetViewportScale[slot])));
                         pg->vsh_constants[NV_IGRAPH_XF_XFCTX_VPSCL][slot] = arg0;
                         pg->vsh_constants_dirty[NV_IGRAPH_XF_XFCTX_VPSCL] = true;
                     }
@@ -2608,8 +2730,7 @@ int pgraph_handle_method(
                         arg0 = argv[argc];
                         //target program register address is prestored in KelvinPrimitive.SetTransformProgramLoad
                         assert(pg->KelvinPrimitive.SetTransformProgramLoad < NV2A_MAX_TRANSFORM_PROGRAM_LENGTH);
-						// transform program is stored outside of KelvinPrimitive, so this assert check must be disabled.
-						//assert(arg0 == pg->KelvinPrimitive.SetTransformProgram[slot]);
+                        // TODO : Since this data is also copied outside Kelvin, we could bypass setting KelvinPrimitive fields
                         //pg->KelvinPrimitive.SetTransformProgram[32] is not enough for xbox d3d, pgraph uses vsh_program_slots[136][4] to store vertex shader program
                         pg->vsh_program_slots[pg->KelvinPrimitive.SetTransformProgramLoad][slot % 4] = arg0;
                         if (slot % 4 == 3) {
@@ -2645,8 +2766,7 @@ int pgraph_handle_method(
                         arg0 = argv[argc];
                         //the target constant register address is prestored in NV097_SET_TRANSFORM_CONSTANT_LOAD  KelvinPrimitive.SetTransformConstantLoad
                         assert(pg->KelvinPrimitive.SetTransformConstantLoad < NV2A_VERTEXSHADER_CONSTANTS);
-						// since the transform constant is stored outside of KelvinPrimitive, we don't store it in KelvinPrimitive in the first round. so this assert check must be disabled.
-						//assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetTransformConstant[slot])));
+                        // TODO : Since this data is also copied outside Kelvin, we could bypass setting KelvinPrimitive fields
                         // VertexShaderConstant *vsh_constant = &pg->vsh_constants[const_load];
                         if ((arg0 != pg->vsh_constants[pg->KelvinPrimitive.SetTransformConstantLoad][slot % 4])) {
                             pg->vsh_constants_dirty[pg->KelvinPrimitive.SetTransformConstantLoad] |= 1;
@@ -2672,7 +2792,6 @@ int pgraph_handle_method(
                         switch(part) {//check the definition of pg->ltctxb, then correlate to KelvinPrimitive.SetBackLight.???
                             //CASE_3(NV097_SET_BACK_LIGHT_AMBIENT_COLOR, 4):
                             CASE_3(0, 1) ://NV097_SET_BACK_LIGHT_AMBIENT_COLOR
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetBackLight[light_index].AmbientColor[part])));
                                 //part -= NV097_SET_BACK_LIGHT_AMBIENT_COLOR / 4;
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_BAMB + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_BAMB + light_index *6] = true;
@@ -2680,13 +2799,11 @@ int pgraph_handle_method(
                             //CASE_3(NV097_SET_BACK_LIGHT_DIFFUSE_COLOR, 4):
                             CASE_3(3, 1) ://NV097_SET_BACK_LIGHT_DIFFUSE_COLOR
                                 //part -= NV097_SET_BACK_LIGHT_DIFFUSE_COLOR / 4;
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetBackLight[light_index].DiffuseColor[part])));
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_BDIF + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_BDIF + light_index *6] = true;
                                 break;
                             //CASE_3(NV097_SET_BACK_LIGHT_SPECULAR_COLOR, 4):
                             CASE_3(6, 1):
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetBackLight[light_index].SpecularColor[part])));
                                 //part -= NV097_SET_BACK_LIGHT_SPECULAR_COLOR / 4;
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_BSPC + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_BSPC + light_index *6] = true;
@@ -2710,61 +2827,51 @@ int pgraph_handle_method(
                         assert(light_index < 8);
                         switch(part) {//check the definition of pg->ltctxb, then correlate to KelvinPrimitive.SetBackLight.???
                             CASE_3(0, 1)://NV097_SET_LIGHT_AMBIENT_COLOR
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].AmbientColor[part])));
                                 //part -= NV097_SET_LIGHT_AMBIENT_COLOR / 4;
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_AMB + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_AMB + light_index *6] = true;
                                 break;
                             CASE_3(3, 1)://NV097_SET_LIGHT_DIFFUSE_COLOR
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].DiffuseColor[part])));
                                 //part -= NV097_SET_LIGHT_DIFFUSE_COLOR / 4;
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_DIF + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_DIF + light_index *6] = true;
                                 break;
                             CASE_3(6, 1)://NV097_SET_LIGHT_SPECULAR_COLOR
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].SpecularColor[part])));
                                 //part -= NV097_SET_LIGHT_SPECULAR_COLOR / 4;
                                 pg->ltctxb[NV_IGRAPH_XF_LTCTXB_L0_SPC + light_index *6][part] = arg0;
                                 pg->ltctxb_dirty[NV_IGRAPH_XF_LTCTXB_L0_SPC + light_index *6] = true;
                                 break;
                             case 9://NV097_SET_LIGHT_LOCAL_RANGE:
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].LocalRange)));
                                 pg->ltc1[NV_IGRAPH_XF_LTC1_r0 + light_index][0] = arg0;
                                 pg->ltc1_dirty[NV_IGRAPH_XF_LTC1_r0 + light_index] = true;
                                 break;
                             CASE_3(10,1)://NV097_SET_LIGHT_INFINITE_HALF_VECTOR
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].InfiniteHalfVector[part])));
                                 //part -= NV097_SET_LIGHT_INFINITE_HALF_VECTOR / 4;
                                 //KelvinPrimitive.SetLight[8].InfiniteHalfVector[3]
                                 //pg->light_infinite_half_vector[light_index][part] = *(float*)&arg0;
                                 break;
                             CASE_3(13,1)://NV097_SET_LIGHT_INFINITE_DIRECTION
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].InfiniteDirection[part])));
                                 //part -= NV097_SET_LIGHT_INFINITE_DIRECTION / 4;
                                 //KelvinPrimitive.SetLight[8].InfiniteDirection[3]
                                 //pg->light_infinite_direction[light_index][part] = *(float*)&arg0;
                                 break;
                             CASE_3(16,1)://NV097_SET_LIGHT_SPOT_FALLOFF
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].SpotFalloff[part])));
                                 //part -= NV097_SET_LIGHT_SPOT_FALLOFF / 4;
                                 pg->ltctxa[NV_IGRAPH_XF_LTCTXA_L0_K + light_index *2][part] = arg0;
                                 pg->ltctxa_dirty[NV_IGRAPH_XF_LTCTXA_L0_K + light_index *2] = true;
                                 break;
                             CASE_4(19,1)://NV097_SET_LIGHT_SPOT_DIRECTION
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].SpotDirection[part])));
                                 //part -= NV097_SET_LIGHT_SPOT_DIRECTION / 4;
                                 //KelvinPrimitive.SetLight[8].SpotDirection[4]
                                 pg->ltctxa[NV_IGRAPH_XF_LTCTXA_L0_SPT + light_index *2][part] = arg0;
                                 pg->ltctxa_dirty[NV_IGRAPH_XF_LTCTXA_L0_SPT + light_index *2] = true;
                                 break;
                             CASE_3(23,1)://NV097_SET_LIGHT_LOCAL_POSITION
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].LocalPosition[part])));
                                 //part -= NV097_SET_LIGHT_LOCAL_POSITION / 4;
                                 //KelvinPrimitive.SetLight[8].LocalPosition[]
                                 //pg->light_local_position[light_index][part] = *(float*)&arg0;
                                 break;
                             CASE_3(26,1)://NV097_SET_LIGHT_LOCAL_ATTENUATION
-                                assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetLight[light_index].LocalAttenuation[part])));
                                 //part -= NV097_SET_LIGHT_LOCAL_ATTENUATION / 4;
                                 //pg->KelvinPrimitive.SetLight[8].LocalAttenuation[3]
                                 //pg->light_local_attenuation[light_index][part] = *(float*)&arg0;
@@ -2778,16 +2885,6 @@ int pgraph_handle_method(
                     }
                     break;
                 }
-            //this state is not implement yet. may not be used in xbox
-                case NV097_SET_STIPPLE_CONTROL: //not implement //pg->KelvinPrimitive.SetStippleControl
-                    assert(arg0 == pg->KelvinPrimitive.SetStippleControl);
-                    break;
-                    
-            //this state is not implement yet. may not be used in xbox
-                CASE_32(NV097_SET_STIPPLE_PATTERN, 4):
-                    slot = (method - NV097_SET_STIPPLE_PATTERN) / 4;
-                    assert(arg0 == pg->KelvinPrimitive.SetStipplePattern[slot]);
-                    break;
 
 					CASE_3(NV097_SET_VERTEX3F, 4) : { //pg->KelvinPrimitive.SetVertex3f[3]: 
 						assert(pg->KelvinPrimitive.SetBeginEnd > NV097_SET_BEGIN_END_OP_END);
@@ -2797,7 +2894,6 @@ int pgraph_handle_method(
 						for (unsigned argc = 0; argc < method_count; argc++) {
 							arg0 = argv[argc];
 							int part = (method - NV097_SET_VERTEX3F + argc) % 4;
-							assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetVertex3f[part])));
 							float *inline_value = pgraph_allocate_inline_buffer_vertices(pg, slot);
 							inline_value[part] = pg->KelvinPrimitive.SetVertex3f[part];
 							if (part == 2) { // Note : no check needed on (slot == NV2A_VERTEX_ATTR_POSITION), as it can't differ here
@@ -2815,7 +2911,6 @@ int pgraph_handle_method(
 						slot = NV2A_VERTEX_ATTR_POSITION; // Countrary to method NV097_SET_VERTEX_DATA*, NV097_SET_VERTEX[34]F always target the first slot (index zero : the vertex position attribute)
 						for (unsigned argc = 0; argc < method_count; argc++) {
 							int part = (method - NV097_SET_VERTEX4F + argc) % 4;
-							assert(arg0 == *((uint32_t*)&(pg->KelvinPrimitive.SetVertex4f[part])));
 							float *inline_value = pgraph_allocate_inline_buffer_vertices(pg, slot);
 							inline_value[part] = pg->KelvinPrimitive.SetVertex4f[part];
 							if (part == 3) { // Note : no check needed on (slot == NV2A_VERTEX_ATTR_POSITION), as it can't differ here
@@ -2925,8 +3020,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_VERTEX_DATA_ARRAY_OFFSET) / 4;
                     for (size_t argc = 0; argc < method_count; argc++, slot ++) {
                             arg0 = argv[argc];
-                            assert(arg0 == pg->KelvinPrimitive.SetVertexDataArrayOffset[slot]);
-
                             pg->vertex_attributes[slot].dma_select =
                                 arg0 & 0x80000000;
                             pg->vertex_attributes[slot].offset =
@@ -2943,7 +3036,6 @@ int pgraph_handle_method(
 					slot = (method - NV097_SET_VERTEX_DATA_ARRAY_FORMAT) / 4;
 					for (size_t argc = 0; argc < method_count; argc++,slot++) {
                         arg0 = argv[argc];
-                        assert(arg0 == pg->KelvinPrimitive.SetVertexDataArrayFormat[slot]);
 						VertexAttribute *vertex_attribute = &pg->vertex_attributes[slot];
 
                         vertex_attribute->format =
@@ -3204,7 +3296,6 @@ int pgraph_handle_method(
 
                     } else {
 
-                        assert(arg0 == pg->KelvinPrimitive.SetBeginEnd); // Verify pg->regs[NV097_SET_BEGIN_END] is reflected in union KelvinPrimitive.SetBeginEnd
                         assert(arg0 <= NV097_SET_BEGIN_END_OP_POLYGON); // Verify the specified primitive mode is inside the valid range
 
                         // Copy arg0/KelvinPrimitive.SetBeginEnd, because we still need this value when
