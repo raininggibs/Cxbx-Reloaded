@@ -9776,9 +9776,16 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetModelView)
 	XB_TRMP(D3DDevice_SetModelView)(pModelView, pInverseModelView, pComposite);
 	// only calls d3d implememtation when pushbuffer is not recording.
 	if (g_pXbox_BeginPush_Buffer == nullptr){
+	
 	    CxbxImpl_SetModelView(pModelView, pInverseModelView, pComposite);
+	    // set DirectModelView/Transform flag.
+		if(pModelView!=nullptr){
+			pgraph_use_DirectModelView();
+		}else{
+			pgraph_use_Transform();
+		}
 	}
-	LOG_UNIMPLEMENTED();
+	//LOG_UNIMPLEMENTED();
 }
 
 // ******************************************************************
