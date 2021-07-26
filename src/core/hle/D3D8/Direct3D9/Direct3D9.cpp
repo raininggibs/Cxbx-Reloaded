@@ -7727,7 +7727,8 @@ IDirect3DBaseTexture* CxbxConvertXboxSurfaceToHostTexture(xbox::X_D3DBaseTexture
 
 	return pNewHostBaseTexture;
 }
-
+extern DWORD NV2A_stateFlags;
+extern xbox::X_D3DBaseTexture * g_pNV2A_SetTexture[xbox::X_D3DTS_STAGECOUNT];
 void CxbxUpdateHostTextures()
 {
 	LOG_INIT; // Allows use of DEBUG_D3DRESULT
@@ -7735,6 +7736,9 @@ void CxbxUpdateHostTextures()
 	// Set the host texture for each stage
 	for (int stage = 0; stage < xbox::X_D3DTS_STAGECOUNT; stage++) {
 		auto pXboxBaseTexture = g_pXbox_SetTexture[stage];
+		// use texture stage textures from NV2A if we're in pushbuffer replay mode
+		if ((NV2A_stateFlags & X_STATE_RUNPUSHBUFFERWASCALLED) != 0)
+			pXboxBaseTexture = g_pNV2A_SetTexture[stage];
 		IDirect3DBaseTexture* pHostBaseTexture = nullptr;
 		bool bNeedRelease = false;
 
@@ -7768,6 +7772,9 @@ void CxbxUpdateHostTextures()
 
 void CxbxUpdateHostTextureScaling()
 {
+	extern NV2ADevice* g_NV2A;
+	NV2AState *d = g_NV2A->GetDeviceState();
+	PGRAPHState *pg = &d->pgraph;
 	// Xbox works with "Linear" and "Swizzled" texture formats
 	// Linear formats are not addressed with normalized coordinates (similar to https://www.khronos.org/opengl/wiki/Rectangle_Texture?)
 	// We want to use normalized coordinates in our shaders, so need to be able to scale the coordinates back
@@ -7781,7 +7788,9 @@ void CxbxUpdateHostTextureScaling()
 
 	for (int stage = 0; stage < xbox::X_D3DTS_STAGECOUNT; stage++) {
 		auto pXboxBaseTexture = g_pXbox_SetTexture[stage];
-
+		// use texture stage textures from NV2A if we're in pushbuffer replay mode
+		if ((NV2A_stateFlags & X_STATE_RUNPUSHBUFFERWASCALLED) != 0)
+			pXboxBaseTexture = g_pNV2A_SetTexture[stage];
 		// No texture, no scaling to do
 		if (pXboxBaseTexture == xbox::zeroptr) {
 			continue;
@@ -7794,7 +7803,6 @@ void CxbxUpdateHostTextureScaling()
 			// Stores both the texture stage index and information for generating coordinates
 			// See D3DTSS_TEXCOORDINDEX
 			auto texCoordIndexState = XboxTextureStates.Get(stage, xbox::X_D3DTSS_TEXCOORDINDEX);
-
 			// If coordinates are generated, we don't have to worry about the coordinates coming from the title
 			bool isGenerated = texCoordIndexState >= X_D3DTSS_TCI_CAMERASPACENORMAL;
 			if (isGenerated) {
@@ -7803,6 +7811,9 @@ void CxbxUpdateHostTextureScaling()
 
 			// Determine the texture coordinate addressing this texture stage
 			texCoordIndex = (texCoordIndexState & 0x3); // 0 - 3
+			// NV2A doesn't preserve X_D3DTSS_TEXCOORDINDEX, so we keep it as stage value.
+			if ((NV2A_stateFlags & X_STATE_RUNPUSHBUFFERWASCALLED) != 0)
+				texCoordIndex = stage; // 0 - 3
 		}
 
 		auto texCoordScale = &texcoordScales[texCoordIndex];
