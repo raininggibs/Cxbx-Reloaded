@@ -932,6 +932,8 @@ extern float g_Xbox_BackbufferScaleX;
 extern float g_Xbox_BackbufferScaleY;
 extern xbox::X_D3DSurface           *g_pXbox_RenderTarget;
 extern xbox::X_D3DSurface           *g_pXbox_BackBufferSurface;
+xbox::X_D3DSurface NV2A_render_target_texture;
+xbox::X_D3DSurface NV2A_depth_stencil_texture;
 
 bool NV2A_viewport_dirty = false;
 void pgraph_SetViewport(NV2AState *d)
@@ -1065,6 +1067,91 @@ void pgraph_SetViewport(NV2AState *d)
 	Viewport.Y = (yViewport - g_Xbox_ScreenSpaceOffset_y) / ScaleY;
 	CxbxImpl_SetViewport(&Viewport);
 	
+}
+extern void *ext_nv_dma_map(NV2AState *d, xbox::addr_xt dma_obj_address, xbox::addr_xt *len);
+// D3D_render_target_update() code from @PatrickvL
+void D3D_render_target_update(NV2AState *d)
+{
+	const uint32_t FakeSurfaceCommon = X_D3DCOMMON_D3DCREATED | X_D3DCOMMON_TYPE_SURFACE | 1; // Set refcount to 1
+
+	PGRAPHState *pg = &d->pgraph;
+
+	DWORD Format;
+
+	bool Swizzled;
+
+	Swizzled = GET_MASK(pg->KelvinPrimitive.SetSurfaceFormat, NV097_SET_SURFACE_FORMAT_TYPE)&NV097_SET_SURFACE_FORMAT_TYPE_SWIZZLE !=0;
+
+	switch (GET_MASK(pg->KelvinPrimitive.SetSurfaceFormat, NV097_SET_SURFACE_FORMAT_COLOR)) {
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_A8R8G8B8:
+		if(Swizzled)
+			Format = xbox::X_D3DFMT_A8R8G8B8;
+		else
+			Format = xbox::X_D3DFMT_LIN_A8R8G8B8;
+		break;
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_X8R8G8B8_Z8R8G8B8:
+		if (Swizzled)
+			Format = xbox::X_D3DFMT_X8R8G8B8;
+		else
+			Format = xbox::X_D3DFMT_LIN_X8R8G8B8;
+		break;
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_R5G6B5:
+		if (Swizzled)
+			Format = xbox::X_D3DFMT_R5G6B5;
+		else
+			Format = xbox::X_D3DFMT_LIN_R5G6B5;
+		break;
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_X1R5G5B5_Z1R5G5B5:
+		if (Swizzled)
+			Format = xbox::X_D3DFMT_X1R5G5B5;
+		else
+			Format = xbox::X_D3DFMT_LIN_X1R5G5B5;
+		break;
+
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_B8:
+		Format = xbox::X_D3DFMT_LIN_L8;
+		break;
+
+	case NV097_SET_SURFACE_FORMAT_COLOR_LE_G8B8:
+		Format = xbox::X_D3DFMT_LIN_G8B8;
+		break;
+	}
+
+	uint32_t color_pitch = pg->KelvinPrimitive.SetSurfacePitch & NV097_SET_SURFACE_PITCH_COLOR;
+	uint32_t depth_pitch = (pg->KelvinPrimitive.SetSurfacePitch & NV097_SET_SURFACE_PITCH_ZETA) >> 16;
+	uint32_t width = (pg->KelvinPrimitive.SetSurfaceClipHorizontal & NV097_SET_SURFACE_CLIP_HORIZONTAL_WIDTH) >> 16;
+	uint32_t height = (pg->KelvinPrimitive.SetSurfaceClipVertical & NV097_SET_SURFACE_CLIP_VERTICAL_HEIGHT) >> 16;
+	hwaddr dma_len,colorBase,zetaBase;
+	colorBase = (hwaddr)ext_nv_dma_map(d, pg->KelvinPrimitive.SetContextDmaColor, &dma_len);
+	NV2A_render_target_texture.Common = FakeSurfaceCommon;
+	NV2A_render_target_texture.Data = pg->KelvinPrimitive.SetSurfaceColorOffset+colorBase; // Suface Color is render target, xbox d3d texture.Data contents dma base, but KelvinPrimitive.SetSurfaceColorOffset contents only the offset
+	NV2A_render_target_texture.Lock = 0;
+	NV2A_render_target_texture.Format = Format; 
+	NV2A_render_target_texture.Size = 0; // TODO : color_pitch
+
+	
+	zetaBase = (hwaddr)ext_nv_dma_map(d, pg->KelvinPrimitive.SetContextDmaZeta, &dma_len);
+	NV2A_depth_stencil_texture.Common = FakeSurfaceCommon;
+	NV2A_depth_stencil_texture.Data = pg->KelvinPrimitive.SetSurfaceZetaOffset+zetaBase; // Suface zeta is zbuffer, xbox d3d texture.Data contents dma base, but KelvinPrimitive.SetSurfaceZetaOffset contents only the offset
+	NV2A_depth_stencil_texture.Lock = 0;
+
+	bool zformat_usefloat = GET_MASK(pg->KelvinPrimitive.SetSurfaceFormat, NV097_SET_CONTROL0_Z_FORMAT) == NV097_SET_CONTROL0_Z_FORMAT_FLOAT;
+
+	if (GET_MASK(pg->KelvinPrimitive.SetSurfaceFormat, NV097_SET_SURFACE_FORMAT_ZETA) == NV097_SET_SURFACE_FORMAT_ZETA_Z24S8) {
+
+		NV2A_depth_stencil_texture.Format = zformat_usefloat ? xbox::X_D3DFMT_LIN_F24S8 : xbox::X_D3DFMT_LIN_D24S8;
+	}
+	else {
+		NV2A_depth_stencil_texture.Format = zformat_usefloat ? xbox::X_D3DFMT_LIN_F16 : xbox::X_D3DFMT_LIN_D16;
+	}
+	
+	NV2A_depth_stencil_texture.Size = 0; // TODO : depth_pitch
+
+	bool d3dzb_usbw = (pg->KelvinPrimitive.SetControl0&NV097_SET_CONTROL0_Z_PERSPECTIVE_ENABLE) != 0;
+	bool d3dzb_yuvenable = GET_MASK(pg->KelvinPrimitive.SetControl0, NV097_SET_CONTROL0_COLOR_SPACE_CONVERT)&NV097_SET_CONTROL0_COLOR_SPACE_CONVERT_CRYCB_TO_RGB != 0;
+	bool d3drs_zenable = pg->KelvinPrimitive.SetDepthTestEnable != 0;
+	bool d3dzb_stencilenable = pg->KelvinPrimitive.SetStencilTestEnable != 0;
+	DWORD SurfaceFormatAntiAliasing = GET_MASK(pg->KelvinPrimitive.SetSurfaceFormat, NV097_SET_SURFACE_FORMAT_ANTI_ALIASING);
 }
 void D3D_draw_state_update(NV2AState *d)
 {

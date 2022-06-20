@@ -35,7 +35,10 @@
 
 #include "core\hle\D3D8\XbD3D8Types.h" // For X_D3DFORMAT
 #include "core\hle\D3D8\XbVertexShader.h"
-
+#include "devices\video\nv2a_vsh_cpu.h"
+#include "devices\video\nv2a_vsh_disassembler.h"
+#include "devices\video\nv2a_vsh_emulator.h"
+#include "devices\video\nv2a_vsh_emulator_execution_state.h"
 // FIXME
 #define qemu_mutex_lock_iothread()
 #define qemu_mutex_unlock_iothread()
@@ -1506,7 +1509,6 @@ void kelvin_validate_struct_field_offsets_against_NV097_defines()
 	static_assert(offsetof(NV097KelvinPrimitive, DebugInit[0]) == NV097_DEBUG_INIT); // 0x00001FC0 [10]
 	// uint32_t Rev_1fe8[0x18 / 4];
 }
-
 //method count always represnt total dword needed as the arguments following the method.
 //caller must ensure there are enough argements available in argv.
 int pgraph_handle_method(
@@ -3931,12 +3933,33 @@ int pgraph_handle_method(
 					//pgraph_use_FixedPixelShader();
                     break;
 
-                CASE_4(NV097_SET_TRANSFORM_DATA,4):break;//not implement //pg->KelvinPrimitive.SetTransformData[4]
+                CASE_4(NV097_SET_TRANSFORM_DATA,4)://pg->KelvinPrimitive.SetTransformData[4]
+					// supposed to be an array of four float values that are assigned to the V0 register.
+					break;
 
-                case NV097_LAUNCH_TRANSFORM_PROGRAM://not implement //pg->KelvinPrimitive.LaunchTransformProgram
+                case NV097_LAUNCH_TRANSFORM_PROGRAM://pg->KelvinPrimitive.LaunchTransformProgram
 					// D3DDevice_RunVertexStateShader() calls NV097_LAUNCH_TRANSFORM_PROGRAM to launch vertex state shader
-					// it loads vertex shader constants to constant slot 0 first.
-					assert(0);
+					// it loads vertex shader constants to constant slot v0 first.
+					// shall launch the vertex shader inside GPU, and the argument comes with it is the starting point (slot) of the vertex shader, which shall be sitting within 0 to 135.
+					//assert(0);
+					//pgraph_SVS_RunVertexStateShader(pg, &pg->KelvinPrimitive.SetTransformData[0]);
+				    {
+					int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
+					Nv2aVshProgram program;
+
+					Nv2aVshParseResult result = nv2a_vsh_parse_program(
+						&program,
+						pg->vsh_program_slots[shader_slot],
+						NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
+					assert(result == NV2AVPR_SUCCESS);
+
+					Nv2aVshCPUXVSSExecutionState state_linkage;
+					Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
+						&state_linkage, (float*)pg->vsh_constants, pg->vsh_constants_dirty);
+					//memcpy(state_linkage.input_regs, pg->vertex_state_shader_v0, sizeof(pg->vertex_state_shader_v0));
+					memcpy(state_linkage.input_regs, &pg->KelvinPrimitive.SetTransformData[0], sizeof(state_linkage.input_regs));
+					nv2a_vsh_emu_execute(&state, &program);
+					}
 					break;
 
 				extern bool g_bUsePassthroughHLSL;//TMP glue
