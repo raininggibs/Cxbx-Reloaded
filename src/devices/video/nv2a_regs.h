@@ -1190,8 +1190,16 @@
 #   define NV097_SET_CONTROL0                                 0x00000290
 #       define NV097_SET_CONTROL0_STENCIL_WRITE_ENABLE            (1 << 0)
 #       define NV097_SET_CONTROL0_Z_FORMAT                        (1 << 12)
+#           define NV097_SET_CONTROL0_Z_FORMAT_FIXED                                   0x00000000
+#           define NV097_SET_CONTROL0_Z_FORMAT_FLOAT                                   0x00000001
 #       define NV097_SET_CONTROL0_Z_PERSPECTIVE_ENABLE            (1 << 16)
+#       define NV097_SET_CONTROL0_TEXTUREPERSPECTIVE                               0x00F00000
+#           define NV097_SET_CONTROL0_TEXTUREPERSPECTIVE_FALSE                         0x00000000
+#           define NV097_SET_CONTROL0_TEXTUREPERSPECTIVE_TRUE                          0x00000001
 #       define NV097_SET_CONTROL0_COLOR_SPACE_CONVERT             (0xF << 28)
+#           define NV097_SET_CONTROL0_COLOR_SPACE_CONVERT_PASS                         0x00000000
+#           define NV097_SET_CONTROL0_COLOR_SPACE_CONVERT_CRYCB_TO_RGB                 0x00000001
+#           define NV097_SET_CONTROL0_COLOR_SPACE_CONVERT_SCRYSCB_TO_RGB               0x00000002
 #   define NV097_SET_LIGHT_CONTROL                            0x00000294
 #        define NV097_SET_LIGHT_CONTROL_LOCALEYE                                    0x00010000
 #        define NV097_SET_LIGHT_CONTROL_LOCALEYE_FALSE                              0x00000000
