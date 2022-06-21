@@ -35,10 +35,7 @@
 
 #include "core\hle\D3D8\XbD3D8Types.h" // For X_D3DFORMAT
 #include "core\hle\D3D8\XbVertexShader.h"
-#include "devices\video\nv2a_vsh_cpu.h"
-#include "devices\video\nv2a_vsh_disassembler.h"
-#include "devices\video\nv2a_vsh_emulator.h"
-#include "devices\video\nv2a_vsh_emulator_execution_state.h"
+#include "nv2a_vsh_emulator.h"
 // FIXME
 #define qemu_mutex_lock_iothread()
 #define qemu_mutex_unlock_iothread()
@@ -3944,21 +3941,22 @@ int pgraph_handle_method(
 					//assert(0);
 					//pgraph_SVS_RunVertexStateShader(pg, &pg->KelvinPrimitive.SetTransformData[0]);
 				    {
-					int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
-					Nv2aVshProgram program;
+						int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
+						Nv2aVshProgram program;
 
-					Nv2aVshParseResult result = nv2a_vsh_parse_program(
-						&program,
-						pg->vsh_program_slots[shader_slot],
-						NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
-					assert(result == NV2AVPR_SUCCESS);
+						Nv2aVshParseResult result = nv2a_vsh_parse_program(
+							&program,
+							pg->vsh_program_slots[shader_slot],
+							NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
+						assert(result == NV2AVPR_SUCCESS);
 
-					Nv2aVshCPUXVSSExecutionState state_linkage;
-					Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
-						&state_linkage, (float*)pg->vsh_constants, pg->vsh_constants_dirty);
-					//memcpy(state_linkage.input_regs, pg->vertex_state_shader_v0, sizeof(pg->vertex_state_shader_v0));
-					memcpy(state_linkage.input_regs, &pg->KelvinPrimitive.SetTransformData[0], sizeof(state_linkage.input_regs));
-					nv2a_vsh_emu_execute(&state, &program);
+						Nv2aVshCPUXVSSExecutionState state_linkage;
+						Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
+							&state_linkage, (float*)pg->vsh_constants, pg->vsh_constants_dirty);
+						//memcpy(state_linkage.input_regs, pg->vertex_state_shader_v0, sizeof(pg->vertex_state_shader_v0));
+						memcpy(state_linkage.input_regs, pg->KelvinPrimitive.SetTransformData, sizeof(pg->KelvinPrimitive.SetTransformData));
+						nv2a_vsh_emu_execute(&state, &program);
+						nv2a_vsh_program_destroy(&program);
 					}
 					break;
 
