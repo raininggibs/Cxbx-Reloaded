@@ -9233,8 +9233,35 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_RunVertexStateShader)
 
 	// If pData is assigned, pData[0..3] is pushed towards nv2a transform data registers
 	// then sends the nv2a a command to launch the vertex shader function located at Address
+	NV2AState* dev = g_NV2A->GetDeviceState();
+	PGRAPHState* pg = &(dev->pgraph);
 
-    LOG_UNIMPLEMENTED(); 
+	float vertex_state_shader_v0[4];
+	if (pData != nullptr)
+		//if pData != nullptr, then it contents v0.xyzw, we shall copy the binary content directly.
+		memcpy(vertex_state_shader_v0, pData, sizeof(vertex_state_shader_v0));
+	else
+		//for pData == nullptr, this data is not supposed to be used. but we assign v0.xyzw 0.0f in each component just in case.
+		std::memset(vertex_state_shader_v0, 0, sizeof(vertex_state_shader_v0));
+
+	int shader_slot = Address;
+	Nv2aVshProgram program;
+
+	Nv2aVshParseResult result = nv2a_vsh_parse_program(
+		&program,
+		//pg->program_data[shader_slot],
+		GetCxbxVertexShaderSlotPtr(shader_slot),
+		NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
+	assert(result == NV2AVPR_SUCCESS);
+
+	Nv2aVshCPUXVSSExecutionState state_linkage;
+	Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
+		&state_linkage, (float*)pg->vsh_constants);
+	memcpy(state_linkage.input_regs, vertex_state_shader_v0, sizeof(vertex_state_shader_v0));
+
+	nv2a_vsh_emu_execute_track_context_writes(&state, &program, pg->vsh_constants_dirty);
+
+	nv2a_vsh_program_destroy(&program);	
 }
 
 // ******************************************************************
