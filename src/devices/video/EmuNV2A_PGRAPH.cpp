@@ -3948,7 +3948,7 @@ int pgraph_handle_method(
                     memcpy(vertex_state_shader_v0, pg->KelvinPrimitive.SetTransformData, sizeof(vertex_state_shader_v0));
                     int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
                     Nv2aVshProgram program;
-
+                    extern xbox::dword_xt* GetCxbxVertexShaderSlotPtr(const DWORD SlotIndexAddress);//tmp glue
                     Nv2aVshParseResult result = nv2a_vsh_parse_program(
                         &program,
                         //pg->program_data[shader_slot],

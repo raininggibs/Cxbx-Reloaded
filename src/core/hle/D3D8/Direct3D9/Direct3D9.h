@@ -1890,9 +1890,9 @@ xbox::void_xt WINAPI EMUPATCH(D3DDevice_GetProjectionViewportMatrix)
 );
 
 // ******************************************************************
-// * patch: D3DDevice_KickOff (D3D::CDevice::KickOff)
+// * patch: CDevice_KickOff (D3D::CDevice::KickOff)
 // ******************************************************************
-xbox::void_xt WINAPI EMUPATCH(D3DDevice_KickOff)();
+xbox::void_xt WINAPI EMUPATCH(CDevice_KickOff)();
 
 // ******************************************************************
 // * patch: D3DDevice_KickPushBuffer

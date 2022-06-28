@@ -109,7 +109,7 @@ void EmuExecutePushBuffer
 		//__asm {
 			//mov  ecx, Xbox_D3DDevice
 		//}
-		//XB_TRMP(D3DDevice_KickOff)();
+		//XB_TRMP(CDevice_KickOff)();
 		// KickOff xbox d3d pushbuffer just in case pfifo_pusher_thread() gets trapped in qemu_cond_wait(). 
 		EmuKickOff();
 	}
@@ -1697,7 +1697,7 @@ void D3D_draw_arrays(NV2AState *d)
 		//the address in pg->KelvinPrimitive.SetVertexDataArrayOffset[] are offsets from VRAM base 0x80000000, we have to add the base address to get full address.
 		//this is only assuming there was only one vertex buffer and the SetVertexDataArrayOffset[0] is the starting address of the vertex buffer. this code should be revised once we finish the vertex buffer lookup code in D3D_draw_state_update()
 		DrawContext.pXboxVertexStreamZeroData = (PVOID)(pg->KelvinPrimitive.SetVertexDataArrayOffset[0] + CONTIGUOUS_MEMORY_BASE);
-		DrawContext.pXboxIndexData = false;
+		DrawContext.pXboxIndexData = nullptr;
 		DrawContext.dwVertexCount = pg->gl_draw_arrays_count[array_index];
 		DrawContext.dwStartVertex = pg->gl_draw_arrays_start[array_index];
 		//because CxbxDrawPrimitiveUP() can only handle dwStartVertex == 0, so we shift the pXboxVertexStreamZeroData to where dwStartVertex is, and reset dwStartVertex to 0.
@@ -1733,7 +1733,7 @@ void D3D_draw_inline_buffer(NV2AState *d)
 	}
 	
 	CxbxDrawContext DrawContext = {};
-	DrawContext.pXboxIndexData = false;
+	DrawContext.pXboxIndexData = nullptr;
 	DrawContext.XboxPrimitiveType = (xbox::X_D3DPRIMITIVETYPE)pg->primitive_mode;
 	DrawContext.dwVertexCount = pg->inline_buffer_length;
 	DrawContext.dwStartVertex = 0;
@@ -1764,7 +1764,7 @@ void D3D_draw_inline_array(NV2AState *d)
 	// render vertices
 	else {
 		CxbxDrawContext DrawContext = {};
-		DrawContext.pXboxIndexData = false;
+		DrawContext.pXboxIndexData = nullptr;
 		assert((xbox::X_D3DPRIMITIVETYPE)pg->primitive_mode != xbox::X_D3DPT_INVALID);
 		DrawContext.XboxPrimitiveType = (xbox::X_D3DPRIMITIVETYPE)pg->primitive_mode;
 		//get vertex size in dword or float.
