@@ -3941,22 +3941,29 @@ int pgraph_handle_method(
 					//assert(0);
 					//pgraph_SVS_RunVertexStateShader(pg, &pg->KelvinPrimitive.SetTransformData[0]);
 				    {
-						int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
-						Nv2aVshProgram program;
+                    NV2AState* dev = g_NV2A->GetDeviceState();
+                    PGRAPHState* pg = &(dev->pgraph);
 
-						Nv2aVshParseResult result = nv2a_vsh_parse_program(
-							&program,
-							pg->vsh_program_slots[shader_slot],
-							NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
-						assert(result == NV2AVPR_SUCCESS);
+                    float vertex_state_shader_v0[4];
+                    memcpy(vertex_state_shader_v0, pg->KelvinPrimitive.SetTransformData, sizeof(vertex_state_shader_v0));
+                    int shader_slot = pg->KelvinPrimitive.LaunchTransformProgram;
+                    Nv2aVshProgram program;
 
-						Nv2aVshCPUXVSSExecutionState state_linkage;
-						Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
-							&state_linkage, (float*)pg->vsh_constants, pg->vsh_constants_dirty);
-						//memcpy(state_linkage.input_regs, pg->vertex_state_shader_v0, sizeof(pg->vertex_state_shader_v0));
-						memcpy(state_linkage.input_regs, pg->KelvinPrimitive.SetTransformData, sizeof(pg->KelvinPrimitive.SetTransformData));
-						nv2a_vsh_emu_execute(&state, &program);
-						nv2a_vsh_program_destroy(&program);
+                    Nv2aVshParseResult result = nv2a_vsh_parse_program(
+                        &program,
+                        //pg->program_data[shader_slot],
+                        GetCxbxVertexShaderSlotPtr(shader_slot),
+                        NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
+                    assert(result == NV2AVPR_SUCCESS);
+
+                    Nv2aVshCPUXVSSExecutionState state_linkage;
+                    Nv2aVshExecutionState state = nv2a_vsh_emu_initialize_xss_execution_state(
+                        &state_linkage, (float*)pg->vsh_constants);
+                    memcpy(state_linkage.input_regs, vertex_state_shader_v0, sizeof(vertex_state_shader_v0));
+
+                    nv2a_vsh_emu_execute_track_context_writes(&state, &program, pg->vsh_constants_dirty);
+
+                    nv2a_vsh_program_destroy(&program);
 					}
 					break;
 

@@ -78,6 +78,9 @@
 #include <thread>
 
 #include <wrl/client.h>
+
+#include "nv2a_vsh_emulator.h"
+
 using namespace Microsoft::WRL;
 
 XboxRenderStateConverter XboxRenderStates;
