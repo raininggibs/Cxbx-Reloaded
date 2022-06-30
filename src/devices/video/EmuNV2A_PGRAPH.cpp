@@ -3952,7 +3952,7 @@ int pgraph_handle_method(
                     Nv2aVshParseResult result = nv2a_vsh_parse_program(
                         &program,
                         //pg->program_data[shader_slot],
-                        GetCxbxVertexShaderSlotPtr(shader_slot),
+                        pg->vsh_program_slots[shader_slot],
                         NV2A_MAX_TRANSFORM_PROGRAM_LENGTH - shader_slot);
                     assert(result == NV2AVPR_SUCCESS);
 
