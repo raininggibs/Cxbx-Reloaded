@@ -5006,24 +5006,28 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetVertexDataColor)
 xbox::hresult_xt WINAPI xbox::EMUPATCH(D3DDevice_End)()
 {
 	LOG_FUNC();
+	//CxbxImpl_End();
 
-	CxbxImpl_End(); //we unpatched D3DDevice_End, but found that there are memory corruptions introduced by multi entrance. so we have to come out a workaround.
+	//we unpatched D3DDevice_End, but found that there are memory corruptions introduced by multi entrance. so we have to come out a workaround.
 
 	//this is a tmp patch before we remove all HLE patches. only to prevent multi entrance confliction
 	//1st we trampoline back to guest code D3DDevice_EndPush()
-
-	hresult_xt result = 0;// XB_TRMP(D3DDevice_End)();
+	XB_TRMP(D3DDevice_End)();
+	hresult_xt result = 0;
+	
 	//2nd we wait for pfifo_run_pusher() to complete the pushbuffer paring, then we return to guest code.
 	//with this wait, we can make sure the pfifo_run_pusher()running in another thread won't conflict with the following guest code we're going to run.
 	//this wait is not necessary once we remove all HLE patches.
-	/*
-	g_nv2a_fifo_is_parsing = true;//set this flag only after we trampoline the D3DDevice_EndPush, make sure pfifo starts parsing pushbuffer before we set this flag to true.
-	while (true) {
-		if (!g_nv2a_fifo_is_parsing) {
-			break;
-		}
+	
+	EmuKickOff();
+	while (g_nv2a_fifo_is_busy) {
+		//__asm {
+			//mov  ecx, Xbox_D3DDevice
+		//}
+		// KickOff xbox d3d pushbuffer just in case pfifo_pusher_thread() gets trapped in qemu_cond_wait(). 
+		EmuKickOff();
 	}
-	*/
+	
 	return result;
 	
 }

@@ -58,7 +58,7 @@ std::map<const std::string, const xbox_patch_t> g_PatchTable = {
 	// Direct3D
 	//PATCH_ENTRY("CDevice_SetStateUP", xbox::EMUPATCH(CDevice_SetStateUP), PATCH_HLE_D3D),
 	//PATCH_ENTRY("CDevice_SetStateVB", xbox::EMUPATCH(CDDevice_SetStateVB), PATCH_HLE_D3D),
-	PATCH_ENTRY("D3DDevice_Begin", xbox::EMUPATCH(D3DDevice_Begin), PATCH_HLE_D3D),
+	//PATCH_ENTRY("D3DDevice_Begin", xbox::EMUPATCH(D3DDevice_Begin), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush", xbox::EMUPATCH(D3DDevice_BeginPush), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush2", xbox::EMUPATCH(D3DDevice_BeginPush2), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_BeginPushBuffer", xbox::EMUPATCH(D3DDevice_BeginPushBuffer), PATCH_HLE_D3D),
