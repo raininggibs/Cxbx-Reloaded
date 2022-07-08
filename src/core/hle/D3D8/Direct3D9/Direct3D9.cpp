@@ -2885,7 +2885,17 @@ void Direct3D_CreateDevice_Start
 	const xbox::X_D3DPRESENT_PARAMETERS     *pPresentationParameters
 )
 {
-    CxbxVertexShaderSetFlags();
+#if 1
+	// restore the usage for EmuKickOff()/SetTransform()/GetTransform()
+	// Set g_pXbox_D3DDevice to point to the Xbox D3D Device
+	if (g_pXbox_D3DDevice == nullptr) {
+		auto it = g_SymbolAddresses.find("D3DDEVICE");
+		if (it != g_SymbolAddresses.end()) {
+			g_pXbox_D3DDevice = (xbox::dword_xt*)it->second;
+		}
+	}
+#endif
+	CxbxVertexShaderSetFlags();
 
     if (!XboxRenderStates.Init()) {
         CxbxrAbort("Failed to init XboxRenderStates");
@@ -2964,17 +2974,6 @@ void Direct3D_CreateDevice_End
             CxbxImpl_SetRenderTarget(xbox::zeroptr, g_pXbox_DefaultDepthStencilSurface);
         }
     }
-
-#if 1
-	// restore the usage for EmuKickOff()/SetTransform()/GetTransform()
-	// Set g_pXbox_D3DDevice to point to the Xbox D3D Device
-	if (g_pXbox_D3DDevice == nullptr) {
-		auto it = g_SymbolAddresses.find("D3DDEVICE");
-		if (it != g_SymbolAddresses.end()) {
-			g_pXbox_D3DDevice = (xbox::dword_xt*)it->second;
-		}
-	}
-#endif
 }
 
 // Overload for logging
@@ -3461,7 +3460,10 @@ xbox::dword_xt* WINAPI xbox::EMUPATCH(D3DDevice_EndPush)(dword_xt *pPush)
 	//	mov  ecx, Xbox_D3DDevice
 	//}
 	// KickOff xbox d3d pushbuffer first. 
+
 	EmuKickOffWait();
+
+	return result;
 }
 
 // ******************************************************************
