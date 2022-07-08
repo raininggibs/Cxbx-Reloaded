@@ -3460,7 +3460,7 @@ xbox::dword_xt* WINAPI xbox::EMUPATCH(D3DDevice_EndPush)(dword_xt *pPush)
 	//	mov  ecx, Xbox_D3DDevice
 	//}
 	// KickOff xbox d3d pushbuffer first. 
-
+	// this EmuKickOffWait() must be called in order to keep pushbuffer/HLE from race condition.
 	EmuKickOffWait();
 
 	return result;
@@ -4804,7 +4804,7 @@ xbox::hresult_xt WINAPI xbox::EMUPATCH(D3DDevice_ApplyStateBlock)
 
 	xbox::hresult_xt result = XB_TRMP(D3DDevice_ApplyStateBlock)(Token);
 
-	EmuKickOffWait();
+	//EmuKickOffWait();
 
 	return result;
 
@@ -5044,12 +5044,8 @@ xbox::hresult_xt WINAPI xbox::EMUPATCH(D3DDevice_End)()
 	//with this wait, we can make sure the pfifo_run_pusher()running in another thread won't conflict with the following guest code we're going to run.
 	//this wait is not necessary once we remove all HLE patches.
 	/*
-	g_nv2a_fifo_is_parsing = true;//set this flag only after we trampoline the D3DDevice_EndPush, make sure pfifo starts parsing pushbuffer before we set this flag to true.
-	while (true) {
-		if (!g_nv2a_fifo_is_parsing) {
-			break;
-		}
-	}
+	// if we unpatch D3DDevice_Begin/End, then this EmuKickOffWait() must be called in order to keep pushbuffer/HLE from race condition.
+	EmuKickOffWait();
 	*/
 	return result;
 	
@@ -8289,6 +8285,8 @@ xbox::void_xt WINAPI xbox::EMUPATCH(D3DDevice_SetPixelShader)
 	CxbxImpl_SetPixelShader(Handle);
 }
 
+extern void D3D_draw_state_update(NV2AState* d);
+
 xbox::void_xt WINAPI CxbxImpl_DrawVertices
 (
 	xbox::X_D3DPRIMITIVETYPE PrimitiveType,
@@ -8302,6 +8300,12 @@ xbox::void_xt WINAPI CxbxImpl_DrawVertices
 	}
 
 	// TODO : Call unpatched CDevice_SetStateVB(0);
+	// Flush pushbuffer
+	// EmuKickOffWait();
+	// map pgraph status to D3D
+	NV2AState* d = g_NV2A->GetDeviceState();
+	// this shall update all NV2A texture/transform/vertex shader/pixel shader
+	// D3D_draw_state_update(d);
 
 	CxbxUpdateNativeD3DResources();
 
