@@ -56,6 +56,8 @@ const uint32_t PATCH_IS_FIBER = 1 << 4;
 // This allows for the eventual importing of Dxbx symbol files and even IDA signatures too!
 std::map<const std::string, const xbox_patch_t> g_PatchTable = {
 	// Direct3D
+	//PATCH_ENTRY("CDevice_SetStateUP", xbox::EMUPATCH(CDevice_SetStateUP), PATCH_HLE_D3D),
+	//PATCH_ENTRY("CDevice_SetStateVB", xbox::EMUPATCH(CDevice_SetStateVB), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_Begin", xbox::EMUPATCH(D3DDevice_Begin), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush", xbox::EMUPATCH(D3DDevice_BeginPush), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_BeginPush2", xbox::EMUPATCH(D3DDevice_BeginPush2), PATCH_HLE_D3D),
@@ -147,8 +149,6 @@ std::map<const std::string, const xbox_patch_t> g_PatchTable = {
 	PATCH_ENTRY("D3DDevice_SetShaderConstantMode", xbox::EMUPATCH(D3DDevice_SetShaderConstantMode), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_SetShaderConstantMode_0__LTCG_eax1", xbox::EMUPATCH(D3DDevice_SetShaderConstantMode_0__LTCG_eax1), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_SetSoftDisplayFilter", xbox::EMUPATCH(D3DDevice_SetSoftDisplayFilter), PATCH_HLE_D3D),
-	//PATCH_ENTRY("D3DDevice_SetStateUP", xbox::EMUPATCH(D3DDevice_SetStateUP), PATCH_HLE_D3D),
-	//PATCH_ENTRY("D3DDevice_SetStateVB", xbox::EMUPATCH(D3DDevice_SetStateVB), PATCH_HLE_D3D),
 	//PATCH_ENTRY("D3DDevice_SetStipple", xbox::EMUPATCH(D3DDevice_SetStipple), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_SetStreamSource", xbox::EMUPATCH(D3DDevice_SetStreamSource), PATCH_HLE_D3D),
 	PATCH_ENTRY("D3DDevice_SetStreamSource_0__LTCG_eax_StreamNumber_edi_pStreamData_ebx_Stride", xbox::EMUPATCH(D3DDevice_SetStreamSource_0__LTCG_eax_StreamNumber_edi_pStreamData_ebx_Stride), PATCH_HLE_D3D),
